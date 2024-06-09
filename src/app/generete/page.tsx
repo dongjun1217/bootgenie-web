@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/checkbox"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export function Component() {
   const [projectType, setProjectType] = useState("gradle")
@@ -14,24 +15,37 @@ export function Component() {
   const [packaging, setPackaging] = useState("jar")
   const [javaVersion, setJavaVersion] = useState("17")
   const [springBootVersion, setSpringBootVersion] = useState("3.3.0")
+  const [projectGroup, setProjectGroup] = useState("com.example")
+  const [projectArtifact, setProjectArtifact] = useState("name")
+  const [projectName, setProjectName] = useState("name")
+  const [projectPackageName, setProjectPackageName] = useState(`${projectGroup}.${projectArtifact}`)
   const [dependencyManager, setDependencyManager] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedDependencies, setSelectedDependencies] = useState([])
-  const springDependencies = [
-    { id: 1, name: "Spring Web" },
-    { id: 2, name: "Spring Data JPA" },
-    { id: 3, name: "Spring Security" },
-    { id: 4, name: "Spring Actuator" },
-    { id: 5, name: "Spring Batch" },
-    { id: 6, name: "Spring Cloud" },
-    { id: 7, name: "Spring Integration" },
-    { id: 8, name: "Spring HATEOAS" },
-    { id: 9, name: "Spring for Apache Kafka" },
-    { id: 10, name: "Spring for RabbitMQ" },
-  ]
+  // const springDependencies = [
+  //   { id: 1, name: "Spring Web" },
+  //   { id: 2, name: "Spring Data JPA" },
+  //   { id: 3, name: "Spring Security" },
+  //   { id: 4, name: "Spring Actuator" },
+  //   { id: 5, name: "Spring Batch" },
+  //   { id: 6, name: "Spring Cloud" },
+  //   { id: 7, name: "Spring Integration" },
+  //   { id: 8, name: "Spring HATEOAS" },
+  //   { id: 9, name: "Spring for Apache Kafka" },
+  //   { id: 10, name: "Spring for RabbitMQ" },
+  // ]
+  const springDependencies = Array.from({ length: 100 }, (_, i) => ({
+    id: i + 1,
+    name: `Spring Dependency ${i + 1}`,
+  }));
   const filteredDependencies = useMemo(() => {
     return springDependencies.filter((dep) => dep.name.toLowerCase().includes(searchTerm.toLowerCase()))
   }, [searchTerm])
+
+  useEffect(() => {
+    setProjectPackageName(`${projectGroup}.${projectArtifact}`)
+  }, [projectGroup, projectArtifact])
+
   const handleProjectTypeChange = (value) => {
     setProjectType(value)
   }
@@ -46,6 +60,15 @@ export function Component() {
   }
   const handleSpringBootVersionChange = (value) => {
     setSpringBootVersion(value)
+  }
+  const handleProjectGroupChange = (e) => {
+    setProjectGroup(e.target.value)
+  }
+  const handleProjectArtifactChange = (e) => {
+    setProjectArtifact(e.target.value)
+  }
+  const handleProjectNameChange = (e) => {
+    setProjectName(e.target.value)
   }
   const handleDependencyManagerChange = (e) => {
     setDependencyManager(e.target.value)
@@ -75,6 +98,10 @@ export function Component() {
     console.log("Packaging:", packaging)
     console.log("JavaVersion:", javaVersion)
     console.log("Spring Boot Version:", springBootVersion)
+    console.log("Project Group:", projectGroup)
+    console.log("Project Artifact:", projectArtifact)
+    console.log("Project Name:", projectName)
+    console.log("Project Package Name:", projectPackageName)
     console.log("Dependency Manager:", dependencyManager)
     console.log("Selected Dependencies:", selectedDependencies)
   }
@@ -111,7 +138,7 @@ export function Component() {
             <Label htmlFor="packaging">Packaging</Label>
             <Select id="packaging" value={packaging} onValueChange={handlePackagingChange}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select language" />
+                <SelectValue placeholder="Select packaging" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="jar">Jar</SelectItem>
@@ -123,7 +150,7 @@ export function Component() {
             <Label htmlFor="java-version">Java Version</Label>
             <Select id="java-version" value={javaVersion} onValueChange={handleJavaVersionChange}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select language" />
+                <SelectValue placeholder="Select Java version" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="22">22</SelectItem>
@@ -147,8 +174,24 @@ export function Component() {
               </SelectContent>
             </Select>
           </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="projectGroup">Group</Label>
+            <Input id="projectGroup" value={projectGroup} onChange={handleProjectGroupChange}/>
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="projectArtifact">Artifact</Label>
+            <Input id="projectArtifact" value={projectArtifact} onChange={handleProjectArtifactChange}/>
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="projectName">Name</Label>
+            <Input id="projectName" value={projectName} onChange={handleProjectNameChange}/>
+          </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="projectPackageName">Package Name</Label>
+            <Input disabled id="projectPackageName" value={projectPackageName}/>
+          </div>
         </div>
-        <div className="col-span-2 border-l border-gray-600 pl-4">
+        <div className="col-span-2 border-l border-gray-600 pl-4 h-full">
           <div className="mb-4">
             <label htmlFor="searchDependencies" className="block font-medium mb-2">
               Search Dependencies
@@ -162,17 +205,17 @@ export function Component() {
               className="w-full"
             />
           </div>
-          <div className="border rounded-lg p-4 max-h-48 overflow-y-auto">
+          <ScrollArea className="h-96 w-full rounded-md border">
+          <div className="border rounded-lg p-4 h-auto overflow-y-auto">
               {filteredDependencies.map((dependency) => (
                 <div key={dependency.id} className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Checkbox
                       id={`dep-${dependency.id}`}
                       checked={selectedDependencies.some((dep) => dep.id === dependency.id)}
-                      onChange={() => handleDependencyToggle(dependency)}
+                      onClick={() => handleDependencyToggle(dependency)}
                     />
                     <Label
-                      htmlFor={`dep-${dependency.id}`}
                       className="font-medium cursor-pointer"
                       onClick={() => handleDependencyToggle(dependency)}
                     >
@@ -193,6 +236,7 @@ export function Component() {
                 </div>
               ))}
           </div>
+          </ScrollArea>
         </div>
         <div className="lg:col-span-1 border-l border-gray-600 pl-4">
           <h2 className="text-2xl font-bold mb-4">Selected Dependencies</h2>
@@ -264,24 +308,5 @@ function MinusIcon(props) {
   );
 }
 
-function SearchIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8" />
-      <path d="m21 21-4.3-4.3" />
-    </svg>
-  );
-}
-
 export default Component;
+
