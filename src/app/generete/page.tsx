@@ -23,25 +23,204 @@ export function Component() {
   const [projectPackageName, setProjectPackageName] = useState(`${projectGroup}.${projectArtifact}`)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedDependencies, setSelectedDependencies] = useState([])
-  // const springDependencies = [
-  //   { id: 1, name: "Spring Web" },
-  //   { id: 2, name: "Spring Data JPA" },
-  //   { id: 3, name: "Spring Security" },
-  //   { id: 4, name: "Spring Actuator" },
-  //   { id: 5, name: "Spring Batch" },
-  //   { id: 6, name: "Spring Cloud" },
-  //   { id: 7, name: "Spring Integration" },
-  //   { id: 8, name: "Spring HATEOAS" },
-  //   { id: 9, name: "Spring for Apache Kafka" },
-  //   { id: 10, name: "Spring for RabbitMQ" },
-  // ]
-  const springDependencies = Array.from({ length: 100 }, (_, i) => ({
-    id: i + 1,
-    name: `Spring Dependency ${i + 1}`,
-  }));
+  const springDependencies = [
+    {
+      category: "Core",
+      dependencies: [
+        { id: 1, name: "Lombok" },
+        { id: 2, name: "Spring Configuration Processor" },
+        { id: 3, name: "Spring Boot DevTools" },
+        { id: 4, name: "Docker Compose Support" },
+        { id: 5, name: "H2 Database" },
+        { id: 6, name: "IBM DB2" },
+        { id: 7, name: "Microsoft SQL Server" },
+        { id: 8, name: "MySQL Connector J" },
+        { id: 9, name: "Oracle Database JDBC" },
+        { id: 10, name: "Oracle Database R2DBC" },
+        { id: 11, name: "R2DBC MySQL" }
+      ]
+    },
+    {
+      category: "Web",
+      dependencies: [
+        { id: 12, name: "Spring Boot Starter Web" },
+        { id: 13, name: "Spring Boot Starter Web Services" },
+        { id: 14, name: "Spring Boot Starter Webflux" },
+        { id: 15, name: "Spring Boot Starter Websocket" },
+        { id: 16, name: "Spring Boot Starter Actuator" }
+      ]
+    },
+    {
+      category: "Data",
+      dependencies: [
+        { id: 17, name: "Spring Boot Starter Data Jpa" },
+        { id: 18, name: "Spring Boot Starter Data Cassandra" },
+        { id: 19, name: "Spring Boot Starter Data Cassandra Reactive" },
+        { id: 20, name: "Spring Boot Starter Data Couchbase" },
+        { id: 21, name: "Spring Boot Starter Data Couchbase Reactive" },
+        { id: 22, name: "Spring Boot Starter Data Elasticsearch" },
+        { id: 23, name: "Spring Boot Starter Data Jdbc" },
+        { id: 24, name: "Spring Boot Starter Data Ldap" },
+        { id: 25, name: "Spring Boot Starter Data Mongodb" },
+        { id: 26, name: "Spring Boot Starter Data Mongodb Reactive" },
+        { id: 27, name: "Spring Boot Starter Data Neo4j" },
+        { id: 28, name: "Spring Boot Starter Data R2dbc" },
+        { id: 29, name: "Spring Boot Starter Data Redis" },
+        { id: 30, name: "Spring Boot Starter Data Redis Reactive" },
+        { id: 31, name: "Spring Boot Starter Data Rest" },
+        { id: 32, name: "Spring Data Rest HAL Explorer" }
+      ]
+    },
+    {
+      category: "Security",
+      dependencies: [
+        { id: 33, name: "Spring Boot Starter Security" },
+        { id: 34, name: "Spring Security Messaging" },
+        { id: 35, name: "Spring Security Rsocket" },
+        { id: 36, name: "Thymeleaf Extras Spring Security6" }
+      ]
+    },
+    {
+      category: "Messaging",
+      dependencies: [
+        { id: 37, name: "Spring Boot Starter Activemq" },
+        { id: 38, name: "Spring Boot Starter Amqp" },
+        { id: 39, name: "Spring Boot Starter Artemis" },
+        { id: 40, name: "Spring Kafka" },
+        { id: 41, name: "Spring Rabbit Stream" },
+        { id: 42, name: "Spring Integration Amqp" },
+        { id: 43, name: "Spring Integration Http" },
+        { id: 44, name: "Spring Integration Jdbc" },
+        { id: 45, name: "Spring Integration Jms" },
+        { id: 46, name: "Spring Integration Jpa" },
+        { id: 47, name: "Spring Integration Kafka" },
+        { id: 48, name: "Spring Integration Mail" },
+        { id: 49, name: "Spring Integration Mongodb" },
+        { id: 50, name: "Spring Integration R2dbc" },
+        { id: 51, name: "Spring Integration Redis" },
+        { id: 52, name: "Spring Integration Rsocket" },
+        { id: 53, name: "Spring Integration Security" },
+        { id: 54, name: "Spring Integration Stomp" },
+        { id: 55, name: "Spring Integration Webflux" },
+        { id: 56, name: "Spring Integration Websocket" },
+        { id: 57, name: "Spring Integration Ws" }
+      ]
+    },
+    {
+      category: "Cloud",
+      dependencies: [
+        { id: 58, name: "Spring Cloud Starter" },
+        { id: 59, name: "Spring Cloud Azure Starter" },
+        { id: 60, name: "Spring Cloud Azure Starter Active Directory" },
+        { id: 61, name: "Spring Cloud Azure Starter Actuator" },
+        { id: 62, name: "Spring Cloud Azure Starter Data Cosmos" },
+        { id: 63, name: "Spring Cloud Azure Starter Integration Storage Queue" },
+        { id: 64, name: "Spring Cloud Azure Starter Jdbc Mysql" },
+        { id: 65, name: "Spring Cloud Azure Starter Jdbc Postgresql" },
+        { id: 66, name: "Spring Cloud Azure Starter Keyvault" },
+        { id: 67, name: "Spring Cloud Azure Starter Storage" },
+        { id: 68, name: "Spring Cloud Bus" },
+        { id: 69, name: "Spring Cloud Config Server" },
+        { id: 70, name: "Spring Cloud Function Web" },
+        { id: 71, name: "Spring Cloud Circuitbreaker Resilience4j" },
+        { id: 72, name: "Spring Cloud Config" },
+        { id: 73, name: "Spring Cloud Consul Config" },
+        { id: 74, name: "Spring Cloud Consul Discovery" },
+        { id: 75, name: "Spring Cloud Gateway" },
+        { id: 76, name: "Spring Cloud Gateway Mvc" },
+        { id: 77, name: "Spring Cloud Loadbalancer" },
+        { id: 78, name: "Spring Cloud Netflix Eureka Client" },
+        { id: 79, name: "Spring Cloud Netflix Eureka Server" },
+        { id: 80, name: "Spring Cloud Openfeign" },
+        { id: 81, name: "Spring Cloud Task" },
+        { id: 82, name: "Spring Cloud Vault Config" },
+        { id: 83, name: "Spring Cloud Zookeeper Config" },
+        { id: 84, name: "Spring Cloud Zookeeper Discovery" },
+        { id: 85, name: "Spring Cloud Stream" },
+        { id: 86, name: "Spring Cloud Stream Binder Kafka" },
+        { id: 87, name: "Spring Cloud Stream Binder Kafka Streams" },
+        { id: 88, name: "Spring Cloud Stream Binder Pulsar" },
+        { id: 89, name: "Spring Cloud Stream Binder Rabbit" }
+      ]
+    },
+    {
+      category: "Batch",
+      dependencies: [
+        { id: 90, name: "Spring Boot Starter Batch" }
+      ]
+    },
+    {
+      category: "GraphQL",
+      dependencies: [
+        { id: 91, name: "Spring Boot Starter Graphql" },
+        { id: 92, name: "GraphQL DGS Code Generation" }
+      ]
+    },
+    {
+      category: "Monitoring",
+      dependencies: [
+        { id: 93, name: "Micrometer Wavefront" },
+        { id: 94, name: "Micrometer Brave" },
+        { id: 95, name: "Zipkin Reporter Brave" },
+        { id: 96, name: "Micrometer Datadog" },
+        { id: 97, name: "Micrometer Dynatrace" },
+        { id: 98, name: "Micrometer Graphite" },
+        { id: 99, name: "Micrometer Influx" },
+        { id: 100, name: "Micrometer New Relic" },
+        { id: 101, name: "Micrometer Prometheus" }
+      ]
+    },
+    {
+      category: "AI",
+      dependencies: [
+        { id: 102, name: "Spring AI Azure Openai" },
+        { id: 103, name: "Spring AI Azure Store" },
+        { id: 104, name: "Spring AI Bedrock AI" },
+        { id: 105, name: "Spring AI Chroma Store" },
+        { id: 106, name: "Spring AI Milvus Store" },
+        { id: 107, name: "Spring AI Mistral AI" },
+        { id: 108, name: "Spring AI Neo4j Store" },
+        { id: 109, name: "Spring AI Ollama" },
+        { id: 110, name: "Spring AI Openai" },
+        { id: 111, name: "Spring AI Pgvector Store" },
+        { id: 112, name: "Spring AI Pinecone Store" },
+        { id: 113, name: "Spring AI PostgresML" },
+        { id: 114, name: "Spring AI Qdrant Store" },
+        { id: 115, name: "Spring AI Redis Store" },
+        { id: 116, name: "Spring AI Stability AI" },
+        { id: 117, name: "Spring AI Transformers" },
+        { id: 118, name: "Spring AI Vertex AI Gemini" },
+        { id: 119, name: "Spring AI Vertex AI Palm2" },
+        { id: 120, name: "Spring AI Weaviate Store" }
+      ]
+    },
+    {
+      category: "Shell",
+      dependencies: [
+        { id: 121, name: "Spring Shell Starter" }
+      ]
+    },
+    {
+      category: "Modulith",
+      dependencies: [
+        { id: 122, name: "Spring Modulith Core" },
+        { id: 123, name: "Spring Modulith Jdbc" },
+        { id: 124, name: "Spring Modulith Jpa" },
+        { id: 125, name: "Spring Modulith Mongodb" }
+      ]
+    }
+  ];
+  
   const filteredDependencies = useMemo(() => {
-    return springDependencies.filter((dep) => dep.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  }, [searchTerm])
+    return springDependencies
+      .map(category => ({
+        ...category,
+        dependencies: category.dependencies.filter(dep =>
+          dep.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      }))
+      .filter(category => category.dependencies.length > 0);
+  }, [searchTerm, springDependencies]);
 
   useEffect(() => {
     setProjectPackageName(`${projectGroup}.${projectArtifact}`)
@@ -92,7 +271,6 @@ export function Component() {
   const handleDependencyRemove = (dependency) => {
     setSelectedDependencies(selectedDependencies.filter((dep) => dep.id !== dependency.id))
   }
-  
   const handleGenerateProject = async (e) => {
     e.preventDefault();
     const projectData = {
@@ -237,36 +415,41 @@ export function Component() {
             />
           </div>
           <ScrollArea className="h-96 w-full rounded-md border">
-          <div className="border rounded-lg p-4 h-auto overflow-y-auto">
-              {filteredDependencies.map((dependency) => (
-                <div key={dependency.id} className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <Checkbox
-                      id={`dep-${dependency.id}`}
-                      checked={selectedDependencies.some((dep) => dep.id === dependency.id)}
-                      onClick={() => handleDependencyToggle(dependency)}
-                    />
-                    <Label
-                      className="font-medium cursor-pointer"
-                      onClick={() => handleDependencyToggle(dependency)}
-                    >
-                      {dependency.name}
-                    </Label>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDependencyToggle(dependency)}
-                  >
-                    {selectedDependencies.some((dep) => dep.id === dependency.id) ? (
-                      <MinusIcon className="w-5 h-5" />
-                    ) : (
-                      <PlusIcon className="w-5 h-5" />
-                    )}
-                  </Button>
+            <div className="border rounded-lg p-4 h-auto overflow-y-auto">
+              {filteredDependencies.map((category) => (
+                <div key={category.category}>
+                  <h3 className="font-bold">{category.category}</h3>
+                  {category.dependencies.map((dependency) => (
+                    <div key={dependency.id} className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id={`dep-${dependency.id}`}
+                          checked={selectedDependencies.some((dep) => dep.id === dependency.id)}
+                          onClick={() => handleDependencyToggle(dependency)}
+                        />
+                        <Label
+                          className="font-medium cursor-pointer"
+                          onClick={() => handleDependencyToggle(dependency)}
+                        >
+                          {dependency.name}
+                        </Label>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDependencyToggle(dependency)}
+                      >
+                        {selectedDependencies.some((dep) => dep.id === dependency.id) ? (
+                          <MinusIcon className="w-5 h-5" />
+                        ) : (
+                          <PlusIcon className="w-5 h-5" />
+                        )}
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               ))}
-          </div>
+            </div>
           </ScrollArea>
         </div>
         <div className="lg:col-span-1 border-l border-gray-600 pl-4">
