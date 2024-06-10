@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect } from "react"
+import axios from "axios"
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
@@ -14,12 +15,12 @@ export function Component() {
   const [language, setLanguage] = useState("java")
   const [packaging, setPackaging] = useState("jar")
   const [javaVersion, setJavaVersion] = useState("17")
+  const [pattern, setPattern] = useState("layered")
   const [springBootVersion, setSpringBootVersion] = useState("3.3.0")
   const [projectGroup, setProjectGroup] = useState("com.example")
   const [projectArtifact, setProjectArtifact] = useState("name")
   const [projectName, setProjectName] = useState("name")
   const [projectPackageName, setProjectPackageName] = useState(`${projectGroup}.${projectArtifact}`)
-  const [dependencyManager, setDependencyManager] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedDependencies, setSelectedDependencies] = useState([])
   // const springDependencies = [
@@ -58,6 +59,9 @@ export function Component() {
   const handleJavaVersionChange = (value) => {
     setJavaVersion(value)
   }
+  const handlePatternChange = (value) => {
+    setPattern(value)
+  }
   const handleSpringBootVersionChange = (value) => {
     setSpringBootVersion(value)
   }
@@ -69,9 +73,6 @@ export function Component() {
   }
   const handleProjectNameChange = (e) => {
     setProjectName(e.target.value)
-  }
-  const handleDependencyManagerChange = (e) => {
-    setDependencyManager(e.target.value)
   }
   const handleDependencyToggle = (dependency) => {
     if (selectedDependencies.some((dep) => dep.id === dependency.id)) {
@@ -91,20 +92,38 @@ export function Component() {
   const handleDependencyRemove = (dependency) => {
     setSelectedDependencies(selectedDependencies.filter((dep) => dep.id !== dependency.id))
   }
-  const handleGenerateProject = () => {
-    console.log("Generating project with the following details:")
-    console.log("Project Type:", projectType)
-    console.log("Language:", language)
-    console.log("Packaging:", packaging)
-    console.log("JavaVersion:", javaVersion)
-    console.log("Spring Boot Version:", springBootVersion)
-    console.log("Project Group:", projectGroup)
-    console.log("Project Artifact:", projectArtifact)
-    console.log("Project Name:", projectName)
-    console.log("Project Package Name:", projectPackageName)
-    console.log("Dependency Manager:", dependencyManager)
-    console.log("Selected Dependencies:", selectedDependencies)
-  }
+  
+  const handleGenerateProject = async (e) => {
+    e.preventDefault();
+    const projectData = {
+      projectType,
+      language,
+      packaging,
+      javaVersion,
+      springBootVersion,
+      pattern,
+      projectGroup,
+      projectArtifact,
+      projectName,
+      projectPackageName,
+      selectedDependencies
+    };
+
+    try {
+      const response = await axios.post("http://localhost:8080/projects/generate", projectData, {
+        responseType: 'blob', // important
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `${projectName}.zip`);
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('There was an error generating the project!', error);
+    }
+  };
+
   return (
     <div className="container mx-auto my-10 px-4 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold mb-8">Spring Project Generator</h1>
@@ -131,6 +150,18 @@ export function Component() {
               <SelectContent>
                 <SelectItem value="java">Java</SelectItem>
                 <SelectItem value="kotlin" disabled>Kotlin</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <Label htmlFor="pattern">Pattern</Label>
+            <Select id="pattern" value={pattern} onValueChange={handlePatternChange}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select pattern" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="layered" >layered</SelectItem>
+                <SelectItem value="DDD" disabled>DDD</SelectItem>
               </SelectContent>
             </Select>
           </div>
