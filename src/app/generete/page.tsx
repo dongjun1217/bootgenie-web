@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-export function Component() {
+export function Generate() {
   const [projectType, setProjectType] = useState("gradle")
   const [language, setLanguage] = useState("java")
   const [packaging, setPackaging] = useState("jar")
@@ -522,5 +522,5 @@ function MinusIcon(props) {
   );
 }
 
-export default Component;
+export default Generate;
 
