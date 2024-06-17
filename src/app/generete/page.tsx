@@ -288,7 +288,7 @@ export function Generate() {
     };
 
     try {
-      const response = await axios.post("http://localhost:8080/projects/generate", projectData, {
+      const response = await axios.post("http://110.15.58.113:7435/projects/generate", projectData, {
         responseType: 'blob', // important
       });
       const url = window.URL.createObjectURL(new Blob([response.data]));
