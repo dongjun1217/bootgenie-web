@@ -339,7 +339,11 @@ export function Generate() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="layered" >layered</SelectItem>
-                <SelectItem value="DDD" disabled>DDD</SelectItem>
+                <SelectItem value="DDD" title="Domain Driven Design">DDD</SelectItem>
+                <SelectItem value="Clean">Clean</SelectItem>
+                <SelectItem value="CQRS" title="Command Query Responsibility Segregation">CQRS</SelectItem>
+                <SelectItem value="Event">Event-Driven</SelectItem>
+                <SelectItem value="Hexagonal">Hexagonal</SelectItem>
               </SelectContent>
             </Select>
           </div>
