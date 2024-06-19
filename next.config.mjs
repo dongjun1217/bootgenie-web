@@ -1,20 +1,20 @@
 import createMDX from 'fumadocs-mdx/config';
 
-const withMDX = createMDX({
-  typescript: {
-    // !! WARN !!
-    // Dangerously allow production builds to successfully complete even if
-    // your project has type errors.
-    // !! WARN !!
-    ignoreBuildErrors: true,
-  }
-});
+const withMDX = createMDX();
 
 /** @type {import('next').NextConfig} */
 const debug = process.env.NODE_ENV !== "production";
 
 const nextConfig = {
   reactStrictMode: true,
+  basePath: '/bootgenie-web',
+  assetPrefix: '/bootgenie-web/',
+  images: {
+    unoptimized: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
-export default createMDX(nextConfig);
+export default withMDX(nextConfig);
