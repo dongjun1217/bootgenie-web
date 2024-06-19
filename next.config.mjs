@@ -13,6 +13,7 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  output: "export",
 };
 
 // MDX 설정을 nextConfig와 통합
@@ -21,4 +22,4 @@ const finalConfig = withMDX({
   pageExtensions: ['js', 'jsx', 'ts', 'tsx', 'md', 'mdx'], // 필요 시 확장자 설정 추가
 });
 
-export default finalConfig;
+export default withMDX(nextConfig);
