@@ -1,4 +1,4 @@
-"use client"
+import { NextRequest, NextResponse } from 'next/server';
 import { createSearchAPI } from 'fumadocs-core/search/server';
 import { getPages } from '@/app/source';
 
@@ -15,14 +15,12 @@ const searchAPI = createSearchAPI('advanced', {
   indexes: pages,
 });
 
-export const GET = async (request: Request) => {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get('query') || '';
   const locale = searchParams.get('locale') || '';
   const tag = searchParams.get('tag') || '';
 
   const results = searchAPI.search(query, { locale, tag });
-  return new Response(JSON.stringify(results), {
-    headers: { 'Content-Type': 'application/json' },
-  });
-};
+  return NextResponse.json(results);
+}
