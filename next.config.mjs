@@ -6,7 +6,6 @@ const withMDX = createMDX();
 const debug = process.env.NODE_ENV !== "production";
 
 const nextConfig = {
-  output: "export",
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: true,
