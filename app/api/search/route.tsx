@@ -1,3 +1,4 @@
+"use client"
 import { createSearchAPI } from 'fumadocs-core/search/server';
 import { getPages } from '@/app/source';
 
