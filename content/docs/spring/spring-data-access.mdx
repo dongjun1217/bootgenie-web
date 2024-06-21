@@ -1,0 +1,209 @@
+---
+title: Spring을 이용한 데이터 접근
+description: Spring을 이용한 데이터 접근
+---
+
+Spring Framework는 다양한 데이터 접근 기술을 지원합니다. 이 글에서는 Spring JDBC와 Spring Data JPA를 사용하여 데이터베이스와 상호작용하는 방법을 설명하겠습니다.
+
+## 6.1 Spring JDBC
+
+### 개념 설명
+Spring JDBC는 JDBC(Java Database Connectivity)를 간편하게 사용할 수 있도록 도와주는 모듈입니다. 이는 데이터베이스와 상호작용할 때 필요한 반복적인 코드를 줄여주고, 더 나은 예외 처리를 제공합니다.
+
+### 주요 컴포넌트
+- **JdbcTemplate**: Spring JDBC의 핵심 클래스이며, JDBC 관련 작업을 간편하게 수행할 수 있게 도와줍니다.
+- **DataSource**: 데이터베이스 커넥션 풀을 관리합니다.
+
+### 예제 코드
+
+#### 설정 파일 (Java 기반 설정)
+
+```java
+@Configuration
+public class JdbcConfig {
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/mydb");
+        dataSource.setUsername("root");
+        dataSource.setPassword("password");
+        return dataSource;
+    }
+
+    @Bean
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+}
+```
+
+**설명:**
+- `@Configuration`: 이 클래스가 Spring 설정 클래스임을 나타냅니다.
+- `DataSource`: 데이터베이스 커넥션을 설정합니다.
+- `JdbcTemplate`: 데이터베이스 작업을 간편하게 수행할 수 있게 도와줍니다.
+
+#### DAO 클래스
+
+```java
+@Repository
+public class UserDao {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public UserDao(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public List<User> findAll() {
+        return jdbcTemplate.query("SELECT * FROM users", new BeanPropertyRowMapper<>(User.class));
+    }
+
+    public User findById(Long id) {
+        return jdbcTemplate.queryForObject("SELECT * FROM users WHERE id = ?", new Object[]{id}, new BeanPropertyRowMapper<>(User.class));
+    }
+
+    public int save(User user) {
+        return jdbcTemplate.update("INSERT INTO users (name, email) VALUES (?, ?)", user.getName(), user.getEmail());
+    }
+
+    public int update(User user) {
+        return jdbcTemplate.update("UPDATE users SET name = ?, email = ? WHERE id = ?", user.getName(), user.getEmail(), user.getId());
+    }
+
+    public int deleteById(Long id) {
+        return jdbcTemplate.update("DELETE FROM users WHERE id = ?", id);
+    }
+}
+```
+
+**설명:**
+- `@Repository`: 이 클래스가 데이터 액세스 계층의 빈임을 나타냅니다.
+- `JdbcTemplate`: 데이터베이스 작업을 수행하는 데 사용됩니다.
+- `BeanPropertyRowMapper`: 쿼리 결과를 객체로 매핑합니다.
+
+### 실행 코드
+
+```java
+@SpringBootApplication
+public class SpringJdbcApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringJdbcApplication.class, args);
+    }
+}
+```
+
+**설명:**
+- `@SpringBootApplication`: Spring Boot 애플리케이션의 진입점임을 나타냅니다.
+- `SpringApplication.run(SpringJdbcApplication.class, args)`: 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+
+---
+
+## 6.2 Spring Data JPA
+
+### 개념 설명
+Spring Data JPA는 JPA(Java Persistence API)를 사용하여 데이터 접근을 단순화하는 모듈입니다. 이는 기본적인 CRUD 기능을 제공하며, JPA를 사용한 데이터 접근을 더욱 간편하게 만들어줍니다.
+
+### 주요 컴포넌트
+- **JpaRepository**: 기본적인 CRUD 기능을 제공하는 리포지토리 인터페이스
+- **Entity**: 데이터베이스 테이블과 매핑되는 클래스
+
+### 예제 코드
+
+#### 엔터티 클래스
+
+```java
+@Entity
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String name;
+    private String email;
+
+    // getters and setters
+}
+```
+
+**설명:**
+- `@Entity`: 이 클래스가 JPA 엔터티임을 나타냅니다.
+- `@Id`: 이 필드가 기본 키임을 나타냅니다.
+- `@GeneratedValue(strategy = GenerationType.IDENTITY)`: 기본 키 생성을 데이터베이스에 위임합니다.
+
+#### 리포지토리 인터페이스
+
+```java
+public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findByLastName(String lastName);
+}
+```
+
+**설명:**
+- `JpaRepository<User, Long>`: `User` 엔터티에 대한 기본적인 CRUD 기능을 제공하는 JPA 리포지토리입니다.
+- `findByLastName(String lastName)`: 사용자 성을 기준으로 사용자 목록을 조회하는 메서드입니다.
+
+#### 서비스 클래스
+
+```java
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+}
+```
+
+**설명:**
+- `@Service`: 이 클래스가 서비스 레이어의 빈임을 나타냅니다.
+- `UserRepository`를 주입받아 데이터 접근 로직을 처리합니다.
+
+### 실행 코드
+
+```java
+@SpringBootApplication
+public class SpringDataJpaApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringDataJpaApplication.class, args);
+    }
+}
+```
+
+**설명:**
+- `@SpringBootApplication`: Spring Boot 애플리케이션의 진입점임을 나타냅니다.
+- `SpringApplication.run(SpringDataJpaApplication.class, args)`: 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+
+---
+
+Spring JDBC와 Spring Data JPA를 사용하여 데이터베이스와 상호작용하는 방법을 알아보았습니다. Spring을 통해 데이터 접근을 간편하고 효율적으로 처리할 수 있습니다. 
+
+다음 글에서는 트랜잭션 관리에 대해 자세히 알아보겠습니다.

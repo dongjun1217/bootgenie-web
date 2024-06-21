@@ -1,0 +1,165 @@
+---
+title: Spring Security를 이용한 애플리케이션 보안
+description: Spring Security를 이용한 애플리케이션 보안
+---
+Spring Security는 애플리케이션의 보안을 강화하기 위한 강력하고 유연한 프레임워크입니다. 인증과 인가 기능을 제공하며, 다양한 보안 요구사항을 충족할 수 있습니다. 이 글에서는 Spring Security의 기본 개념과 설정 방법을 살펴보겠습니다.
+
+## 8.1 Spring Security 개요
+
+### 개념 설명
+Spring Security는 자바 애플리케이션에 보안 기능을 추가하는 데 사용됩니다. 주요 기능으로는 인증(Authentication)과 인가(Authorization)가 있습니다.
+
+- **인증(Authentication)**: 사용자의 신원을 확인하는 과정입니다.
+- **인가(Authorization)**: 인증된 사용자가 특정 자원에 접근할 수 있는 권한을 부여하는 과정입니다.
+
+### 주요 컴포넌트
+- **AuthenticationManager**: 인증을 담당하는 인터페이스입니다.
+- **SecurityContext**: 현재 인증된 사용자에 대한 보안 컨텍스트를 제공하는 인터페이스입니다.
+- **GrantedAuthority**: 사용자에게 부여된 권한을 나타내는 인터페이스입니다.
+
+## 8.2 Spring Security 설정
+
+### 개념 설명
+Spring Security를 사용하여 애플리케이션에 보안 기능을 추가하려면, 몇 가지 설정이 필요합니다. 기본적인 설정으로는 WebSecurityConfigurerAdapter를 확장하여 보안 설정을 정의합니다.
+
+### 예제 코드
+
+#### 설정 파일 (Java 기반 설정)
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+            .authorizeRequests()
+                .antMatchers("/", "/home").permitAll()
+                .anyRequest().authenticated()
+                .and()
+            .formLogin()
+                .loginPage("/login")
+                .permitAll()
+                .and()
+            .logout()
+                .permitAll();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+            .inMemoryAuthentication()
+                .withUser("user").password("{noop}password").roles("USER")
+                .and()
+                .withUser("admin").password("{noop}admin").roles("ADMIN");
+    }
+}
+```
+
+**설명:**
+- `@EnableWebSecurity`: Spring Security를 활성화합니다.
+- `configure(HttpSecurity http)`: HTTP 보안 설정을 정의합니다.
+  - `authorizeRequests()`: 요청에 대한 인가 설정을 정의합니다.
+  - `antMatchers("/", "/home").permitAll()`: 루트 경로와 `/home` 경로는 모든 사용자에게 허용됩니다.
+  - `anyRequest().authenticated()`: 모든 요청은 인증된 사용자만 접근할 수 있습니다.
+  - `formLogin()`: 폼 기반 로그인을 설정합니다.
+  - `logout()`: 로그아웃 설정을 정의합니다.
+- `configure(AuthenticationManagerBuilder auth)`: 인메모리 사용자 인증을 설정합니다.
+  - `inMemoryAuthentication()`: 인메모리에서 사용자 정보를 설정합니다.
+  - `withUser("user").password("{noop}password").roles("USER")`: 사용자 `user`와 `password`를 가진 USER 역할을 설정합니다.
+  - `withUser("admin").password("{noop}admin").roles("ADMIN")`: 사용자 `admin`과 `admin` 비밀번호를 가진 ADMIN 역할을 설정합니다.
+
+#### 컨트롤러 클래스
+
+```java
+@Controller
+public class HomeController {
+
+    @GetMapping("/")
+    public String home() {
+        return "home";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+}
+```
+
+**설명:**
+- `@Controller`: 이 클래스가 컨트롤러임을 나타냅니다.
+- `@GetMapping("/")`: 루트 경로에 대한 GET 요청을 처리합니다.
+- `@GetMapping("/login")`: 로그인 페이지에 대한 GET 요청을 처리합니다.
+
+#### 뷰 파일 (home.jsp)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome</h1>
+    <p>Welcome to the home page!</p>
+    <a href="/logout">Logout</a>
+</body>
+</html>
+```
+
+**설명:**
+- `Welcome`: 환영 메시지를 표시합니다.
+- `<a href="/logout">Logout</a>`: 로그아웃 링크를 제공합니다.
+
+#### 뷰 파일 (login.jsp)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="post" action="/login">
+        <div>
+            <label>Username: <input type="text" name="username"/></label>
+        </div>
+        <div>
+            <label>Password: <input type="password" name="password"/></label>
+        </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+    </form>
+</body>
+</html>
+```
+
+**설명:**
+- `form`: 사용자 이름과 비밀번호를 입력받는 로그인 폼을 제공합니다.
+- `method="post" action="/login"`: 로그인 폼은 POST 메서드를 사용하여 `/login` 경로로 전송됩니다.
+
+### 실행 코드
+
+```java
+@SpringBootApplication
+public class SpringSecurityApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringSecurityApplication.class, args);
+    }
+}
+```
+
+**설명:**
+- `@SpringBootApplication`: Spring Boot 애플리케이션의 진입점임을 나타냅니다.
+- `SpringApplication.run(SpringSecurityApplication.class, args)`: 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+
+---
+
+Spring Security를 사용하여 애플리케이션에 보안 기능을 추가하는 방법을 살펴보았습니다. 기본적인 인증과 인가 기능을 설정하고, 사용자에게 로그인 페이지와 홈 페이지를 제공하는 예제를 다루었습니다.
+
+다음 글에서는 애플리케이션 테스트에 대해 자세히 알아보겠습니다.

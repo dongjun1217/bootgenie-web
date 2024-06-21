@@ -1,0 +1,190 @@
+---
+title: Spring의 기초 개념
+description: Spring의 기초 개념
+---
+
+## 2.1 Inversion of Control (IoC)
+
+### 개념 설명
+Inversion of Control(IoC)은 객체의 생성과 관리 책임을 개발자가 아닌 프레임워크가 대신하는 개념입니다. 이를 통해 객체 간의 결합도를 낮추고 코드의 재사용성을 높일 수 있습니다. Spring에서는 IoC 컨테이너가 이러한 역할을 수행합니다.
+
+### 예제 코드
+
+```java
+// 설정 클래스로 Spring IoC 컨테이너가 관리할 빈을 정의합니다.
+@Configuration
+public class AppConfig {
+
+    // MyService 타입의 빈을 생성하여 IoC 컨테이너에 등록합니다.
+    @Bean
+    public MyService myService() {
+        return new MyServiceImpl();
+    }
+
+    // MyRepository 타입의 빈을 생성하여 IoC 컨테이너에 등록합니다.
+    @Bean
+    public MyRepository myRepository() {
+        return new MyRepositoryImpl();
+    }
+}
+
+// 서비스 인터페이스 정의
+public interface MyService {
+    void performTask();
+}
+
+// 서비스 구현 클래스
+public class MyServiceImpl implements MyService {
+
+    private final MyRepository myRepository;
+
+    // MyRepository 타입의 의존성을 생성자를 통해 주입받습니다.
+    public MyServiceImpl(MyRepository myRepository) {
+        this.myRepository = myRepository;
+    }
+
+    @Override
+    public void performTask() {
+        // 비즈니스 로직 수행
+        System.out.println("Task performed by MyServiceImpl.");
+        myRepository.save();
+    }
+}
+
+// 리포지토리 인터페이스 정의
+public interface MyRepository {
+    void save();
+}
+
+// 리포지토리 구현 클래스
+public class MyRepositoryImpl implements MyRepository {
+    @Override
+    public void save() {
+        // 데이터 저장 로직
+        System.out.println("Data saved by MyRepositoryImpl.");
+    }
+}
+```
+
+### 코드 설명
+
+- `@Configuration`: 해당 클래스가 Spring 설정 클래스임을 나타냅니다. 이 클래스는 빈 정의를 포함합니다.
+- `@Bean`: 메서드가 반환하는 객체를 Spring IoC 컨테이너가 관리하는 빈으로 등록합니다.
+- `MyServiceImpl` 클래스는 `MyService` 인터페이스를 구현하고, `MyRepository` 타입의 의존성을 생성자를 통해 주입받습니다.
+- `MyRepositoryImpl` 클래스는 `MyRepository` 인터페이스를 구현합니다.
+- `AppConfig` 클래스에서 `MyService`와 `MyRepository` 타입의 빈을 정의하고, IoC 컨테이너가 이를 관리하도록 합니다.
+
+### 실행 코드
+
+```java
+public class MainApp {
+    public static void main(String[] args) {
+        // AnnotationConfigApplicationContext를 사용하여 Spring IoC 컨테이너를 초기화합니다.
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        // 컨텍스트에서 MyService 타입의 빈을 가져옵니다.
+        MyService myService = context.getBean(MyService.class);
+
+        // myService 객체의 메서드를 호출하여 작업을 수행합니다.
+        myService.performTask();
+    }
+}
+```
+
+### 코드 설명
+
+- `ApplicationContext`는 Spring IoC 컨테이너의 인터페이스로, 빈의 생성, 구성, 관리 및 라이프사이클을 처리합니다.
+- `AnnotationConfigApplicationContext`는 자바 기반 설정 파일을 읽어들이기 위해 사용되는 Spring 컨텍스트입니다.
+- `context.getBean(MyService.class)`를 통해 IoC 컨테이너에서 `MyService` 타입의 빈을 가져옵니다.
+- `myService.performTask()`를 호출하여 `MyService` 빈이 수행하는 작업을 실행합니다.
+
+---
+
+## 2.2 Dependency Injection (DI)
+
+### 개념 설명
+Dependency Injection(DI)은 객체 간의 의존성을 설정 파일 또는 애너테이션을 통해 주입하는 방식입니다. DI를 통해 객체 간의 결합도를 낮추고, 코드의 유지보수성과 테스트 용이성을 높일 수 있습니다.
+
+### 예제 코드
+
+```java
+// 서비스 인터페이스 정의
+public interface MyService {
+    void performTask();
+}
+
+// 서비스 구현 클래스
+@Service
+public class MyServiceImpl implements MyService {
+
+    private final MyRepository myRepository;
+
+    // 생성자를 통해 MyRepository 타입의 의존성을 주입받습니다.
+    @Autowired
+    public MyServiceImpl(MyRepository myRepository) {
+        this.myRepository = myRepository;
+    }
+
+    @Override
+    public void performTask() {
+        // 비즈니스 로직 수행
+        System.out.println("Task performed by MyServiceImpl.");
+        myRepository.save();
+    }
+}
+
+// 리포지토리 인터페이스 정의
+public interface MyRepository {
+    void save();
+}
+
+// 리포지토리 구현 클래스
+@Repository
+public class MyRepositoryImpl implements MyRepository {
+    @Override
+    public void save() {
+        // 데이터 저장 로직
+        System.out.println("Data saved by MyRepositoryImpl.");
+    }
+}
+```
+
+### 코드 설명
+
+- `@Service`: 이 애너테이션은 해당 클래스가 서비스 레이어의 빈임을 나타냅니다.
+- `@Autowired`: 이 애너테이션은 생성자, 필드 또는 메서드에 의존성을 주입합니다.
+- `@Repository`: 이 애너테이션은 해당 클래스가 데이터 액세스 계층의 빈임을 나타냅니다.
+- `MyServiceImpl` 클래스는 `MyService` 인터페이스를 구현하고, `MyRepository` 타입의 의존성을 생성자를 통해 주입받습니다.
+- `MyRepositoryImpl` 클래스는 `MyRepository` 인터페이스를 구현합니다.
+
+### 실행 코드
+
+```java
+@SpringBootApplication
+public class SpringDiApplication {
+
+    public static void main(String[] args) {
+        // SpringApplication.run을 사용하여 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+        ApplicationContext context = SpringApplication.run(SpringDiApplication.class, args);
+
+        // 컨텍스트에서 MyService 타입의 빈을 가져옵니다.
+        MyService myService = context.getBean(MyService.class);
+
+        // myService 객체의 메서드를 호출하여 작업을 수행합니다.
+        myService.performTask();
+    }
+}
+```
+
+### 코드 설명
+
+- `@SpringBootApplication`: 이 애너테이션은 Spring Boot 애플리케이션의 진입점임을 나타냅니다.
+- `SpringApplication.run(SpringDiApplication.class, args)`: 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+- `context.getBean(MyService.class)`를 통해 IoC 컨테이너에서 `MyService` 타입의 빈을 가져옵니다.
+- `myService.performTask()`를 호출하여 `MyService` 빈이 수행하는 작업을 실행합니다.
+
+---
+
+Spring의 IoC와 DI를 통해 객체의 생성과 관리를 프레임워크에 맡기고, 의존성을 주입받아 코드의 결합도를 낮추는 방법을 살펴보았습니다. 이러한 기초 개념을 이해함으로써 Spring 애플리케이션의 구조와 설계를 보다 효율적으로 할 수 있습니다.
+
+다음 글에서는 Spring의 주요 모듈에 대해 자세히 알아보겠습니다.

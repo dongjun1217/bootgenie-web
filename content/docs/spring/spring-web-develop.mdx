@@ -1,0 +1,213 @@
+---
+title: Spring을 이용한 웹 애플리케이션 개발
+description: Spring을 이용한 웹 애플리케이션 개발
+---
+
+Spring Framework는 강력하고 유연한 웹 애플리케이션 개발 기능을 제공합니다. 주로 사용되는 모듈은 Spring MVC로, 이는 Model-View-Controller (MVC) 패턴을 기반으로 한 웹 애플리케이션 프레임워크입니다. 또한 RESTful 웹 서비스를 쉽게 개발할 수 있는 기능도 제공합니다.
+
+## 5.1 Spring MVC 기본
+
+### 개념 설명
+Spring MVC는 웹 애플리케이션 개발을 위한 프레젠테이션 계층을 관리합니다. 이는 사용자 요청을 처리하고, 적절한 뷰를 선택하여 응답을 생성합니다. Spring MVC는 DispatcherServlet을 중심으로 작동합니다.
+
+### 주요 컴포넌트
+- **DispatcherServlet**: 모든 요청을 중앙에서 처리하고 적절한 핸들러로 전달합니다.
+- **Controller**: 사용자 요청을 처리하고 모델 데이터를 생성합니다.
+- **Model**: 뷰로 전달할 데이터를 포함합니다.
+- **ViewResolver**: 적절한 뷰를 선택하고 렌더링합니다.
+
+### 예제 코드
+
+#### 설정 파일 (Java 기반 설정)
+
+```java
+@Configuration
+@EnableWebMvc
+@ComponentScan(basePackages = "com.example")
+public class WebConfig implements WebMvcConfigurer {
+
+    @Bean
+    public InternalResourceViewResolver viewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setSuffix(".jsp");
+        return resolver;
+    }
+}
+```
+
+**설명:**
+- `@EnableWebMvc`: Spring MVC 설정을 활성화합니다.
+- `@ComponentScan`: 지정된 패키지를 스캔하여 빈으로 등록합니다.
+- `InternalResourceViewResolver`: JSP 뷰를 해결하기 위해 설정합니다.
+
+#### Controller 클래스
+
+```java
+@Controller
+public class HomeController {
+
+    @GetMapping("/")
+    public String home(Model model) {
+        model.addAttribute("message", "Hello, Spring MVC!");
+        return "home";
+    }
+}
+```
+
+**설명:**
+- `@Controller`: 이 클래스가 컨트롤러임을 나타냅니다.
+- `@GetMapping("/")`: 루트 경로에 대한 GET 요청을 처리합니다.
+- `Model`: 뷰로 전달할 데이터를 담는 객체
+- `return "home"`: 뷰 이름을 반환합니다.
+
+#### 뷰 파일 (home.jsp)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+</head>
+<body>
+    <h1>${message}</h1>
+</body>
+</html>
+```
+
+**설명:**
+- `${message}`: 모델 데이터에서 전달된 메시지를 표시합니다.
+
+### 실행 코드
+
+```java
+@SpringBootApplication
+public class SpringMvcApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringMvcApplication.class, args);
+    }
+}
+```
+
+**설명:**
+- `@SpringBootApplication`: Spring Boot 애플리케이션의 진입점임을 나타냅니다.
+- `SpringApplication.run(SpringMvcApplication.class, args)`: 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+
+---
+
+## 5.2 RESTful 웹 서비스
+
+### 개념 설명
+RESTful 웹 서비스는 HTTP 프로토콜을 사용하여 리소스를 CRUD(Create, Read, Update, Delete) 방식으로 처리하는 웹 서비스입니다. Spring MVC는 RESTful 웹 서비스를 쉽게 개발할 수 있는 기능을 제공합니다.
+
+### 주요 컴포넌트
+- **@RestController**: RESTful 웹 서비스를 위한 컨트롤러를 정의합니다.
+- **@RequestMapping**: HTTP 요청을 메서드에 매핑합니다.
+- **@GetMapping, @PostMapping, @PutMapping, @DeleteMapping**: HTTP 메서드(GET, POST, PUT, DELETE)를 처리합니다.
+
+### 예제 코드
+
+#### RESTful 컨트롤러 클래스
+
+```java
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @GetMapping
+    public List<User> getAllUsers() {
+        return userService.findAllUsers();
+    }
+
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) {
+        return userService.findUserById(id);
+    }
+
+    @PostMapping
+    public User createUser(@RequestBody User user) {
+        return userService.saveUser(user);
+    }
+
+    @PutMapping("/{id}")
+    public User updateUser(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
+        return userService.updateUser(user);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+    }
+}
+```
+
+**설명:**
+- `@RestController`: 이 클래스가 RESTful 웹 서비스의 컨트롤러임을 나타냅니다.
+- `@RequestMapping("/api/users")`: 이 클래스의 모든 메서드는 `/api/users` 경로와 매핑됩니다.
+- `@GetMapping, @PostMapping, @PutMapping, @DeleteMapping`: 각각의 HTTP 메서드(GET, POST, PUT, DELETE)를 처리합니다.
+- `@PathVariable`: URL 경로 변수와 매핑됩니다.
+- `@RequestBody`: 요청 본문을 객체로 변환합니다.
+
+### 서비스 클래스
+
+```java
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    public User findUserById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
+
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
+}
+```
+
+**설명:**
+- `@Service`: 이 클래스가 서비스 레이어의 빈임을 나타냅니다.
+- `UserRepository`를 주입받아 데이터 접근 로직을 처리합니다.
+
+### 리포지토리 인터페이스
+
+```java
+public interface UserRepository extends JpaRepository<User, Long> {
+}
+```
+
+**설명:**
+- `JpaRepository<User, Long>`: `User` 엔터티에 대한 기본적인 CRUD 기능을 제공하는 JPA 리포지토리입니다.
+
+---
+
+Spring MVC와 RESTful 웹 서비스를 사용하여 웹 애플리케이션을 개발하는 방법을 알아보았습니다. Spring을 통해 웹 애플리케이션을 간편하게 설정하고 개발할 수 있습니다. 
+
+다음 글에서는 데이터 접근에 대해 자세히 알아보겠습니다.

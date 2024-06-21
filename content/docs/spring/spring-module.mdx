@@ -1,0 +1,151 @@
+---
+title: Spring의 주요 모듈
+description: Spring의 주요 모듈
+---
+
+Spring Framework는 다양한 모듈로 구성되어 있으며, 각 모듈은 특정 기능을 제공하여 개발자의 필요에 맞게 선택적으로 사용할 수 있습니다. 이 글에서는 Spring의 주요 모듈들을 살펴보겠습니다.
+
+## 3.1 Spring Core
+
+### 개념 설명
+Spring Core 모듈은 Spring Framework의 핵심 부분으로, IoC와 DI 기능을 제공합니다. 이 모듈은 다른 모든 모듈의 기초가 되며, Spring 애플리케이션을 구성하는 기본적인 요소들을 포함합니다.
+
+### 주요 컴포넌트
+- **BeanFactory**: Spring IoC 컨테이너의 핵심 인터페이스로, 빈의 생성과 관리를 담당합니다.
+- **ApplicationContext**: BeanFactory를 확장한 인터페이스로, 추가적인 기능(예: 메시지 소스, 이벤트 발행 등)을 제공합니다.
+- **Spring EL (Expression Language)**: Spring의 표현 언어로, 런타임에 값을 계산하고 주입할 수 있게 합니다.
+
+### 예제 코드
+
+```java
+@Configuration
+public class AppConfig {
+
+    @Bean
+    public MyService myService() {
+        return new MyServiceImpl();
+    }
+
+    @Bean
+    public MyRepository myRepository() {
+        return new MyRepositoryImpl();
+    }
+}
+```
+
+**설명:**
+- `@Configuration`: 이 클래스가 Spring 설정 클래스임을 나타냅니다.
+- `@Bean`: 이 메서드가 반환하는 객체를 Spring IoC 컨테이너에서 관리하는 빈으로 등록합니다.
+
+## 3.2 Spring AOP
+
+### 개념 설명
+Aspect-Oriented Programming(AOP)은 애플리케이션의 횡단 관심사(cross-cutting concerns)를 모듈화하는 방법입니다. Spring AOP 모듈은 이러한 AOP 기능을 제공하여, 비즈니스 로직과 횡단 관심사를 분리할 수 있게 합니다.
+
+### 주요 컴포넌트
+- **Aspect**: 횡단 관심사를 모듈화한 것
+- **Advice**: 언제, 어떻게 횡단 관심사가 실행될지 정의
+- **Pointcut**: 어느 조인포인트에서 Advice가 실행될지 정의
+- **JoinPoint**: 횡단 관심사가 적용될 수 있는 실행 지점
+
+### 예제 코드
+
+```java
+@Aspect
+@Component
+public class LoggingAspect {
+
+    @Before("execution(* com.example.service.*.*(..))")
+    public void logBefore(JoinPoint joinPoint) {
+        System.out.println("메서드 실행 전: " + joinPoint.getSignature().getName());
+    }
+}
+```
+
+**설명:**
+- `@Aspect`: 이 클래스가 AOP의 애스펙트임을 나타냅니다.
+- `@Before`: 메서드 실행 전에 어드바이스를 실행합니다.
+- `execution(* com.example.service.*.*(..))`: 특정 패키지의 모든 메서드를 타겟으로 지정합니다.
+
+## 3.3 Spring Data
+
+### 개념 설명
+Spring Data 모듈은 데이터 접근 기술을 단순화하고 통합하기 위한 목적으로 만들어졌습니다. 이는 다양한 데이터 소스(SQL, NoSQL 등)에 대한 일관된 접근 방식을 제공합니다.
+
+### 주요 컴포넌트
+- **CrudRepository**: 기본적인 CRUD 기능을 제공하는 리포지토리 인터페이스
+- **JpaRepository**: JPA를 사용한 데이터 접근 기능을 제공하는 리포지토리 인터페이스
+
+### 예제 코드
+
+```java
+public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findByLastName(String lastName);
+}
+```
+
+**설명:**
+- `JpaRepository<User, Long>`: `User` 엔터티에 대한 기본적인 CRUD 기능을 제공하는 JPA 리포지토리입니다.
+- `findByLastName(String lastName)`: 사용자 성을 기준으로 사용자 목록을 조회하는 메서드입니다.
+
+## 3.4 Spring MVC
+
+### 개념 설명
+Spring MVC 모듈은 웹 애플리케이션 개발을 위한 Model-View-Controller(MVC) 패턴을 제공합니다. 이는 웹 애플리케이션의 프레젠테이션 계층을 관리하고, 사용자 요청을 처리합니다.
+
+### 주요 컴포넌트
+- **DispatcherServlet**: 요청을 처리하고 적절한 핸들러로 전달하는 중앙 서블릿
+- **Controller**: 사용자의 요청을 처리하고, 응답을 생성하는 클래스
+- **ViewResolver**: 뷰를 선택하고 렌더링하는 역할
+
+### 예제 코드
+
+```java
+@Controller
+public class HomeController {
+
+    @GetMapping("/")
+    public String home(Model model) {
+        model.addAttribute("message", "Hello, Spring MVC!");
+        return "home";
+    }
+}
+```
+
+**설명:**
+- `@Controller`: 이 클래스가 컨트롤러임을 나타냅니다.
+- `@GetMapping("/")`: 루트 경로에 대한 GET 요청을 처리합니다.
+- `Model`: 뷰로 전달할 데이터를 담는 객체
+- `return "home"`: 뷰 이름을 반환합니다.
+
+## 3.5 Spring Boot
+
+### 개념 설명
+Spring Boot는 Spring Framework를 기반으로 한 생산성 높은 프레임워크로, 최소한의 설정으로 빠르게 애플리케이션을 개발하고 배포할 수 있게 합니다. Spring Boot는 기본적으로 다양한 스타터 패키지와 자동 설정 기능을 제공합니다.
+
+### 주요 컴포넌트
+- **SpringApplication**: Spring Boot 애플리케이션을 실행하는 메인 클래스
+- **application.properties**: 애플리케이션 설정 파일
+- **Starter POMs**: 다양한 의존성을 포함한 Maven 또는 Gradle 스타터 패키지
+
+### 예제 코드
+
+```java
+@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+```
+
+**설명:**
+- `@SpringBootApplication`: 이 애너테이션은 Spring Boot 애플리케이션의 진입점임을 나타냅니다.
+- `SpringApplication.run(Application.class, args)`: 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+
+---
+
+이제 Spring의 주요 모듈에 대해 알아보았습니다. 
+
+다음 글에서는 설정 및 구성에 대해 자세히 알아보겠습니다.

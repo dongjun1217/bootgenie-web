@@ -1,0 +1,182 @@
+---
+title: Spring의 트랜잭션 관리
+description: Spring의 트랜잭션 관리
+---
+
+Spring Framework는 강력하고 유연한 트랜잭션 관리 기능을 제공합니다. 트랜잭션 관리는 데이터의 일관성과 무결성을 유지하는 데 중요한 역할을 하며, Spring은 선언적 트랜잭션 관리와 프로그래매틱 트랜잭션 관리 두 가지 방식을 지원합니다.
+
+## 7.1 선언적 트랜잭션 관리
+
+### 개념 설명
+선언적 트랜잭션 관리는 애너테이션 또는 XML 설정을 사용하여 트랜잭션을 관리합니다. 이는 간단하고 명확하게 트랜잭션 경계를 정의할 수 있게 해줍니다.
+
+### 주요 컴포넌트
+- **@Transactional**: 메서드 또는 클래스에 트랜잭션 경계를 선언합니다.
+
+### 예제 코드
+
+#### 설정 파일 (Java 기반 설정)
+
+```java
+@Configuration
+@EnableTransactionManagement
+public class TransactionConfig {
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/mydb");
+        dataSource.setUsername("root");
+        dataSource.setPassword("password");
+        return dataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+}
+```
+
+**설명:**
+- `@EnableTransactionManagement`: 트랜잭션 관리 기능을 활성화합니다.
+- `PlatformTransactionManager`: 트랜잭션을 관리하는 핵심 인터페이스입니다.
+
+#### 서비스 클래스
+
+```java
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Transactional
+    public void performTransactionalOperation(User user) {
+        userRepository.save(user);
+        // 추가적인 트랜잭션 작업
+    }
+}
+```
+
+**설명:**
+- `@Transactional`: 이 메서드가 트랜잭션 내에서 실행됨을 나타냅니다. 메서드가 성공적으로 완료되면 트랜잭션이 커밋되고, 예외가 발생하면 롤백됩니다.
+
+### 실행 코드
+
+```java
+@SpringBootApplication
+public class SpringTransactionApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringTransactionApplication.class, args);
+    }
+}
+```
+
+**설명:**
+- `@SpringBootApplication`: Spring Boot 애플리케이션의 진입점임을 나타냅니다.
+- `SpringApplication.run(SpringTransactionApplication.class, args)`: 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+
+---
+
+## 7.2 프로그래매틱 트랜잭션 관리
+
+### 개념 설명
+프로그래매틱 트랜잭션 관리는 코드를 통해 명시적으로 트랜잭션을 관리합니다. 이는 더 세밀한 제어가 필요할 때 유용합니다.
+
+### 주요 컴포넌트
+- **TransactionTemplate**: 프로그래매틱 트랜잭션 관리를 간편하게 도와주는 템플릿 클래스
+- **TransactionCallback**: 트랜잭션 내에서 실행될 코드를 정의하는 콜백 인터페이스
+
+### 예제 코드
+
+#### 설정 파일 (Java 기반 설정)
+
+```java
+@Configuration
+@EnableTransactionManagement
+public class TransactionConfig {
+
+    @Bean
+    public DataSource dataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/mydb");
+        dataSource.setUsername("root");
+        dataSource.setPassword("password");
+        return dataSource;
+    }
+
+    @Bean
+    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+
+    @Bean
+    public TransactionTemplate transactionTemplate(PlatformTransactionManager transactionManager) {
+        return new TransactionTemplate(transactionManager);
+    }
+}
+```
+
+**설명:**
+- `TransactionTemplate`: 트랜잭션을 프로그래매틱하게 관리하기 위한 템플릿입니다.
+
+#### 서비스 클래스
+
+```java
+@Service
+public class UserService {
+
+    private final UserRepository userRepository;
+    private final TransactionTemplate transactionTemplate;
+
+    @Autowired
+    public UserService(UserRepository userRepository, TransactionTemplate transactionTemplate) {
+        this.userRepository = userRepository;
+        this.transactionTemplate = transactionTemplate;
+    }
+
+    public void performTransactionalOperation(User user) {
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+            @Override
+            protected void doInTransactionWithoutResult(TransactionStatus status) {
+                userRepository.save(user);
+                // 추가적인 트랜잭션 작업
+            }
+        });
+    }
+}
+```
+
+**설명:**
+- `TransactionTemplate`: 트랜잭션을 관리하는 템플릿으로, `execute` 메서드를 사용하여 트랜잭션 내에서 실행될 코드를 정의합니다.
+- `TransactionCallbackWithoutResult`: 트랜잭션 내에서 실행될 코드를 정의하는 콜백 클래스입니다.
+
+### 실행 코드
+
+```java
+@SpringBootApplication
+public class SpringTransactionApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringTransactionApplication.class, args);
+    }
+}
+```
+
+**설명:**
+- `@SpringBootApplication`: Spring Boot 애플리케이션의 진입점임을 나타냅니다.
+- `SpringApplication.run(SpringTransactionApplication.class, args)`: 애플리케이션을 실행하고 IoC 컨테이너를 초기화합니다.
+
+---
+
+Spring의 트랜잭션 관리 기능을 통해 데이터의 일관성과 무결성을 유지하는 방법을 살펴보았습니다. 선언적 트랜잭션 관리와 프로그래매틱 트랜잭션 관리를 상황에 맞게 사용하여 트랜잭션을 효과적으로 관리할 수 있습니다.
+
+다음 글에서는 Spring Security를 사용한 보안에 대해 자세히 알아보겠습니다.
