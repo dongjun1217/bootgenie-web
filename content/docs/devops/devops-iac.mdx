@@ -1,0 +1,209 @@
+---
+title: 인프라스트럭처 자동화
+description: 인프라스트럭처 자동화
+---
+## 인프라스트럭처 코드(IaC)의 개념과 필요성
+
+### 개념 설명
+
+**인프라스트럭처 코드(Infrastructure as Code, IaC)** 는 인프라스트럭처 설정을 코드로 작성하고 관리하는 방법론입니다. 서버, 네트워크, 데이터베이스 등의 인프라 자원을 프로그래밍 언어 또는 선언적 언어로 정의하여 자동화된 방식으로 프로비저닝하고 관리합니다. IaC는 클라우드 환경에서 특히 유용하며, 반복 가능한 인프라 설정을 가능하게 합니다.
+
+### 필요성
+
+IaC의 주요 필요성은 다음과 같습니다:
+
+1. **자동화**: 수작업으로 인프라를 설정하는 대신, 코드로 작성하여 자동으로 인프라를 프로비저닝할 수 있습니다.
+2. **일관성**: 동일한 코드로 여러 환경에서 동일한 설정을 적용할 수 있어, 환경 간의 일관성을 유지할 수 있습니다.
+3. **버전 관리**: 인프라 설정 파일을 버전 관리 시스템(Git 등)에 저장하여 변경 이력을 관리하고, 이전 상태로 롤백할 수 있습니다.
+4. **재사용성**: 인프라 설정을 모듈화하여 재사용할 수 있으며, 이를 통해 설정 작업을 효율화할 수 있습니다.
+
+## 주요 IaC 도구 소개
+
+### Terraform
+
+Terraform은 HashiCorp에서 개발한 오픈 소스 IaC 도구로, 다양한 클라우드 제공업체와 온프레미스 환경을 지원합니다. 선언적 언어인 HCL(HashiCorp Configuration Language)을 사용하여 인프라를 정의하고, 이를 프로비저닝할 수 있습니다.
+
+### Ansible
+
+Ansible은 Red Hat에서 개발한 오픈 소스 구성 관리 도구로, YAML을 사용하여 인프라를 정의합니다. 에이전트가 필요 없으며, SSH를 통해 원격 서버에 접속하여 설정을 적용합니다.
+
+### Chef
+
+Chef는 Ruby를 기반으로 한 오픈 소스 구성 관리 도구로, 코드로 인프라를 정의합니다. Chef 서버와 노드 간의 클라이언트-서버 모델을 사용하여 인프라를 관리합니다.
+
+### Puppet
+
+Puppet은 Puppet Labs에서 개발한 오픈 소스 구성 관리 도구로, 선언적 언어를 사용하여 인프라를 정의합니다. Puppet 서버와 에이전트를 사용하여 인프라를 관리합니다.
+
+## Terraform을 이용한 인프라스트럭처 프로비저닝
+
+### Terraform 설치 및 설정
+
+Terraform을 설치하려면 다음 명령을 사용합니다:
+
+```sh
+# Terraform 설치
+sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+sudo apt-add-repository "deb https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+sudo apt-get update && sudo apt-get install terraform
+```
+
+### 기본 구성 파일 작성 및 적용
+
+Terraform 구성 파일은 `.tf` 확장자를 가지며, 리소스를 정의하는 데 사용됩니다. 예를 들어, AWS EC2 인스턴스를 생성하는 구성 파일은 다음과 같습니다:
+
+#### main.tf
+
+```hcl
+provider "aws" {
+  region = "us-west-2"
+}
+
+resource "aws_instance" "example" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "example-instance"
+  }
+}
+```
+
+이 구성 파일을 적용하려면 다음 명령을 사용합니다:
+
+```sh
+# Terraform 초기화
+terraform init
+
+# 실행 계획 생성
+terraform plan
+
+# 인프라 적용
+terraform apply
+```
+
+### 모듈화 및 재사용 가능한 코드 작성
+
+Terraform 모듈을 사용하여 인프라 설정을 모듈화하고 재사용할 수 있습니다. 예를 들어, EC2 인스턴스 모듈을 작성하여 여러 곳에서 사용할 수 있습니다.
+
+#### ec2_module/main.tf
+
+```hcl
+variable "ami" {}
+variable "instance_type" {}
+
+resource "aws_instance" "example" {
+  ami           = var.ami
+  instance_type = var.instance_type
+
+  tags = {
+    Name = "example-instance"
+  }
+}
+```
+
+이 모듈을 사용하려면 다음과 같이 호출합니다:
+
+#### main.tf
+
+```hcl
+module "ec2_instance" {
+  source        = "./ec2_module"
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+}
+```
+
+## Ansible을 이용한 구성 관리
+
+### Ansible 설치 및 설정
+
+Ansible을 설치하려면 다음 명령을 사용합니다:
+
+```sh
+# Ansible 설치
+sudo apt update
+sudo apt install ansible
+```
+
+### 플레이북 작성 및 실행
+
+Ansible 플레이북은 YAML 형식으로 작성되며, 설정 작업을 정의합니다. 예를 들어, Apache 웹 서버를 설치하는 플레이북은 다음과 같습니다:
+
+#### playbook.yml
+
+```yaml
+---
+- name: Install and configure Apache
+  hosts: webservers
+  become: yes
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Start Apache
+      service:
+        name: apache2
+        state: started
+```
+
+이 플레이북을 실행하려면 다음 명령을 사용합니다:
+
+```sh
+ansible-playbook -i inventory playbook.yml
+```
+
+### Ansible Roles를 이용한 구성 관리
+
+Ansible Roles는 구성 작업을 역할별로 분리하여 관리할 수 있는 방법입니다. 이를 통해 코드의 재사용성과 관리 효율성을 높일 수 있습니다. 예를 들어, Apache 역할을 정의하는 디렉토리 구조는 다음과 같습니다:
+
+```
+roles/
+  apache/
+    tasks/
+      main.yml
+    handlers/
+      main.yml
+    templates/
+    files/
+    vars/
+      main.yml
+    defaults/
+      main.yml
+    meta/
+      main.yml
+```
+
+#### roles/apache/tasks/main.yml
+
+```yaml
+---
+- name: Install Apache
+  apt:
+    name: apache2
+    state: present
+
+- name: Start Apache
+  service:
+    name: apache2
+    state: started
+```
+
+#### playbook.yml
+
+```yaml
+---
+- name: Configure web servers
+  hosts: webservers
+  roles:
+    - apache
+```
+
+---
+
+이로써 인프라스트럭처 코드(IaC)의 개념과 필요성, 주요 IaC 도구 소개, Terraform과 Ansible을 이용한 인프라스트럭처 프로비저닝 및 구성 관리 방법에 대해 알아보았습니다. 
+
+이를 통해 인프라 설정을 자동화하고, 일관성과 효율성을 높일 수 있습니다.

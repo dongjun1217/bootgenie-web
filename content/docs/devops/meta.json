@@ -1,0 +1,12 @@
+{
+    "title": "devops",
+    "pages": [
+      "devops-start",
+      "devops-ci",
+      "devops-cd",
+      "devops-iac",
+      "devops-container",
+      "devops-security",
+      "devops-toolchain"
+    ]
+  }
