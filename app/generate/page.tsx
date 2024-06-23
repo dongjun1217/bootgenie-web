@@ -11,7 +11,18 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { toast } from "sonner"
 import { ChevronsUpDown ,X} from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport,
+  navigationMenuTriggerStyle
+} from "@/components/ui/navigation-menu"
 
 
 
@@ -350,7 +361,36 @@ export function Generate() {
 
   return (
     <div className="container mx-auto my-10 px-4 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-bold mb-8">Spring Project Generator</h1>
+      <h1 className="font-bold mb-8">
+      <NavigationMenu>
+      <NavigationMenuList>
+        <NavigationMenuItem>
+            <NavigationMenuLink href="/" className={navigationMenuTriggerStyle()}>
+              Boot-genie
+            </NavigationMenuLink>
+        </NavigationMenuItem>
+        /
+        <NavigationMenuItem>
+          <NavigationMenuTrigger>Project Generate</NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                <a
+                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted to-muted p-6 no-underline outline-none focus:shadow-md"
+                    href="/docs"
+                  >
+                    <div className="mb-2 mt-4 text-lg font-medium">
+                      Learn
+                    </div>
+                    <p className="text-sm leading-tight text-muted-foreground">
+                      Learn a variety of courses from Spring to DevOps. With Boot-Genie.
+                    </p>
+                  </a>
+            </ul>
+          </NavigationMenuContent>
+        </NavigationMenuItem>
+      </NavigationMenuList>
+    </NavigationMenu>
+      </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="space-y-4">
           <div>
