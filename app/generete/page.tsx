@@ -5,10 +5,15 @@ import axios from "axios"
 import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { toast } from "sonner"
+import { ChevronsUpDown ,X} from "lucide-react"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Badge } from "@/components/ui/badge"
+
+
 
 export function Generate() {
   const [projectType, setProjectType] = useState("gradle")
@@ -23,6 +28,8 @@ export function Generate() {
   const [projectPackageName, setProjectPackageName] = useState(`${projectGroup}.${projectArtifact}`)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedDependencies, setSelectedDependencies] = useState([])
+  const [isCooldown, setIsCooldown] = useState(false)
+
   const springDependencies = [
     {
       category: "Core",
@@ -271,8 +278,29 @@ export function Generate() {
   const handleDependencyRemove = (dependency) => {
     setSelectedDependencies(selectedDependencies.filter((dep) => dep.id !== dependency.id))
   }
+  // 날짜 포맷팅 함수
+  function formatDate(date) {
+    const options = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true
+    };
+    return new Intl.DateTimeFormat('en-US', options).format(date);
+  }
   const handleGenerateProject = async (e) => {
     e.preventDefault();
+    if (isCooldown) {
+      return(toast("프로젝트는 10초에 한번 생성 가능합니다", {
+        action: {
+          label: "close",
+          onClick: () => console.log("close"),
+        },
+      }));
+    }
     const projectData = {
       projectType,
       language,
@@ -297,6 +325,24 @@ export function Generate() {
       link.setAttribute('download', `${projectName}.zip`);
       document.body.appendChild(link);
       link.click();
+      const now = new Date();
+      const formattedDate = formatDate(now);
+
+      toast("프로젝트가 생성되었습니다.", {
+        description: formattedDate,
+        action: {
+          label: "close",
+          onClick: () => console.log("close"),
+        },
+      });
+      
+
+      // 쿨다운 시작
+      setIsCooldown(true);
+      setTimeout(() => {
+        setIsCooldown(false);
+      }, 10000); // 5초 후 쿨다운 해제
+
     } catch (error) {
       console.error('There was an error generating the project!', error);
     }
@@ -457,25 +503,30 @@ export function Generate() {
           </ScrollArea>
         </div>
         <div className="lg:col-span-1 border-l border-gray-600 pl-4">
-          <h2 className="text-2xl font-bold mb-4">Selected Dependencies</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-4">
-            {selectedDependencies.map((dependency) => (
-              <Card key={dependency.id} className="border border-gray-200">
-                <CardContent>
-                  <div className="flex justify-between items-center">
-                    <div className="font-medium">{dependency.name}</div>
-                    <Button
-                      size="sm"
-                      onClick={() => handleDependencyRemove(dependency)}
-                      className="bg-red-500 text-white hover:bg-red-600"
-                    >
-                      Remove
-                    </Button>
+          <Collapsible className="w-full space-y-2">
+            <div className="flex items-center justify-between space-x-4 px-4">
+              <h4 className="text-sm font-semibold">{`Selected Dependencies (${selectedDependencies.length})`}</h4>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="sm" className="w-9 p-0">
+                  <ChevronsUpDown className="h-4 w-4" />
+                  <span className="sr-only">Toggle</span>
+                </Button>
+              </CollapsibleTrigger>
+            </div>
+            <CollapsibleContent className="space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-1 gap-4">
+                {selectedDependencies.map((dependency) => (
+                  <div key={dependency.id} className="rounded-md border px-4 py-3 font-mono text-sm">
+                    <div className="font-medium">
+                      {dependency.name}
+                      <X id="close" onClick={() => handleDependencyRemove(dependency)}/>
+                      </div>
+
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                ))}
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
       </div>
       <div className="mt-8 flex justify-end">
