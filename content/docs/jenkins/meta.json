@@ -1,0 +1,15 @@
+{
+    "title": "Jenkins",
+    "pages": [
+      "jenkins-start",
+      "jenkins-setup",
+      "jenkins-firstjob",
+      "jenkins-pipeline",
+      "jenkins-declarative",
+      "jenkins-git",
+      "jenkins-cicd",
+      "jenkins-plugin",
+      "jenkins-monitoring",
+      "jenkins-security"
+    ]
+  }

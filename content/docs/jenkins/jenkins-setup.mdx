@@ -1,0 +1,122 @@
+---
+title: Jenkins 설치 및 설정
+description: Jenkins 설치 및 설정
+---
+## Jenkins 설치 방법
+
+### Windows에서 Jenkins 설치
+
+1. **Java 설치**
+   - Jenkins는 Java 기반 애플리케이션이므로 Java Development Kit (JDK)가 필요합니다.
+   - [Oracle JDK](https://www.oracle.com/java/technologies/javase-downloads.html) 또는 [OpenJDK](https://adoptopenjdk.net/)를 다운로드하여 설치합니다.
+   - 설치 후, 명령 프롬프트에서 `java -version` 명령어를 입력하여 Java가 올바르게 설치되었는지 확인합니다.
+
+2. **Jenkins 설치**
+   - Jenkins의 공식 사이트에서 [Windows용 Jenkins 설치 파일](https://www.jenkins.io/download/)을 다운로드합니다.
+   - 다운로드한 `jenkins.msi` 파일을 실행하여 설치를 시작합니다.
+   - 설치 마법사의 지시에 따라 Jenkins를 설치합니다. 기본 설정을 사용해도 무방하지만, 설치 경로를 필요에 따라 변경할 수 있습니다.
+
+3. **Jenkins 시작**
+   - 설치가 완료되면 Jenkins 서비스가 자동으로 시작됩니다.
+   - 웹 브라우저를 열고 `http://localhost:8080`으로 접속하여 Jenkins 초기 설정 페이지에 접근합니다.
+
+4. **초기 관리자 암호 입력**
+   - Jenkins 설치 후 첫 실행 시, 초기 관리자 암호를 입력해야 합니다.
+   - 암호는 `C:\Program Files (x86)\Jenkins\secrets\initialAdminPassword` 파일에 저장되어 있습니다.
+   - 해당 파일을 열어 암호를 복사한 뒤, 웹 페이지에 입력합니다.
+
+### macOS에서 Jenkins 설치
+
+1. **Homebrew 설치**
+   - macOS에서 Jenkins를 설치하는 가장 간단한 방법은 Homebrew를 사용하는 것입니다.
+   - Homebrew가 설치되어 있지 않다면, 터미널에서 다음 명령어를 실행하여 Homebrew를 설치합니다:
+     ```sh
+     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+     ```
+
+2. **Jenkins 설치**
+   - Homebrew를 사용하여 Jenkins를 설치합니다:
+     ```sh
+     brew install jenkins-lts
+     ```
+
+3. **Jenkins 시작**
+   - Jenkins를 시작하려면 다음 명령어를 사용합니다:
+     ```sh
+     brew services start jenkins-lts
+     ```
+   - 웹 브라우저를 열고 `http://localhost:8080`으로 접속하여 Jenkins 초기 설정 페이지에 접근합니다.
+
+4. **초기 관리자 암호 입력**
+   - Jenkins 설치 후 첫 실행 시, 초기 관리자 암호를 입력해야 합니다.
+   - 암호는 `/usr/local/var/jenkins_home/secrets/initialAdminPassword` 파일에 저장되어 있습니다.
+   - 해당 파일을 열어 암호를 복사한 뒤, 웹 페이지에 입력합니다.
+
+### Linux에서 Jenkins 설치
+
+1. **Java 설치**
+   - Jenkins는 Java 기반 애플리케이션이므로 Java Development Kit (JDK)가 필요합니다.
+   - 예를 들어, Ubuntu에서는 다음 명령어로 OpenJDK를 설치할 수 있습니다:
+     ```sh
+     sudo apt update
+     sudo apt install openjdk-11-jdk
+     ```
+   - 설치 후, `java -version` 명령어를 입력하여 Java가 올바르게 설치되었는지 확인합니다.
+
+2. **Jenkins 저장소 추가 및 설치**
+   - Jenkins 패키지를 설치하기 위해 공식 Jenkins 저장소를 추가하고 GPG 키를 추가합니다:
+     ```sh
+     curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee \
+       /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+     echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+       https://pkg.jenkins.io/debian binary/ | sudo tee \
+       /etc/apt/sources.list.d/jenkins.list > /dev/null
+     sudo apt update
+     sudo apt install jenkins
+     ```
+
+3. **Jenkins 시작**
+   - Jenkins를 시작하려면 다음 명령어를 사용합니다:
+     ```sh
+     sudo systemctl start jenkins
+     sudo systemctl enable jenkins
+     ```
+   - 웹 브라우저를 열고 `http://localhost:8080`으로 접속하여 Jenkins 초기 설정 페이지에 접근합니다.
+
+4. **초기 관리자 암호 입력**
+   - Jenkins 설치 후 첫 실행 시, 초기 관리자 암호를 입력해야 합니다.
+   - 암호는 `/var/lib/jenkins/secrets/initialAdminPassword` 파일에 저장되어 있습니다.
+   - 해당 파일을 열어 암호를 복사한 뒤, 웹 페이지에 입력합니다.
+
+## 초기 설정 및 기본 설정 방법
+
+![240624-012600](/posts/jenkins-setup/240624-012600.png)
+
+1. **플러그인 설치**
+   - Jenkins에 처음 로그인하면 '추천 플러그인 설치'와 '특정 플러그인 선택' 중 선택할 수 있습니다.
+   - 초보자라면 '추천 플러그인 설치'를 선택하는 것이 좋습니다.
+   - Jenkins는 자동으로 기본적인 플러그인들을 설치합니다.
+
+2. **첫 번째 관리자 계정 생성**
+   - 초기 플러그인 설치가 완료되면 첫 번째 관리자 계정을 생성해야 합니다.
+   - 사용자 이름, 비밀번호, 이름, 이메일 주소를 입력하여 관리자 계정을 생성합니다.
+
+3. **기본 설정 완료**
+   - 기본 URL 설정 페이지가 나타납니다. Jenkins가 접근할 수 있는 기본 URL을 확인하고 변경이 필요하면 수정합니다.
+   - 설정을 완료하면 Jenkins 대시보드로 이동합니다.
+
+## 플러그인 설치 및 관리
+![240624-012752](/posts/jenkins-setup/240624-012752.png)
+1. **플러그인 관리 페이지**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭한 후, 'Manage Plugins'를 선택합니다.
+   - 'Available' 탭에서 설치할 플러그인을 검색하고 선택하여 설치할 수 있습니다.
+   - 'Updates' 탭에서는 설치된 플러그인의 업데이트를 확인하고 적용할 수 있습니다.
+   - 'Installed' 탭에서는 현재 설치된 플러그인의 목록을 확인할 수 있습니다.
+
+2. **플러그인 설치**
+   - 필요한 플러그인을 선택하고 'Install without restart' 또는 'Download now and install after restart' 버튼을 클릭하여 설치합니다.
+   - 플러그인 설치가 완료되면 Jenkins를 재시작하여 플러그인이 정상적으로 동작하는지 확인합니다.
+
+이로써 Jenkins의 설치 및 초기 설정 과정을 마쳤습니다. 
+
+다음 섹션에서는 Jenkins의 기본 사용법과 첫 번째 Jenkins Job을 생성하는 방법에 대해 다루겠습니다.

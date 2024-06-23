@@ -1,0 +1,159 @@
+---
+title: Declarative Pipeline
+description: Declarative Pipeline
+---
+
+## Declarative Pipeline 개념
+
+Declarative Pipeline은 Jenkins Pipeline을 더 간단하고 이해하기 쉽게 작성할 수 있도록 도와주는 새로운 구문입니다. 이는 구조화된 형태로 작성되며, 오류를 줄이고 유지 관리를 쉽게 하기 위해 설계되었습니다. Declarative Pipeline은 `pipeline` 블록 내에 모든 파이프라인 코드를 포함하며, 각 단계와 단계 내의 작업을 명확하게 정의할 수 있습니다.
+
+## Declarative Pipeline 기본 예제
+
+Declarative Pipeline의 기본 구조는 다음과 같습니다:
+
+```groovy
+pipeline {
+    agent any 
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                // 빌드 관련 명령어 실행
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                // 테스트 관련 명령어 실행
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // 배포 관련 명령어 실행
+            }
+        }
+    }
+}
+```
+
+### 예제 1: 간단한 Declarative Pipeline
+
+1. **Pipeline Job 생성**
+   - Jenkins 대시보드에서 '새로운 Item'을 클릭합니다.
+   - 이름을 입력하고 'Pipeline'을 선택한 후 '확인'을 클릭합니다.
+
+2. **Pipeline 정의**
+   - 'Pipeline' 섹션에서 다음과 같은 스크립트를 입력합니다:
+     ```groovy
+     pipeline {
+         agent any
+         stages {
+             stage('Build') {
+                 steps {
+                     echo 'Building...'
+                     // 빌드 관련 명령어 실행
+                 }
+             }
+             stage('Test') {
+                 steps {
+                     echo 'Testing...'
+                     // 테스트 관련 명령어 실행
+                 }
+             }
+             stage('Deploy') {
+                 steps {
+                     echo 'Deploying...'
+                     // 배포 관련 명령어 실행
+                 }
+             }
+         }
+     }
+     ```
+
+3. **저장 및 실행**
+   - 설정을 마친 후 '저장' 버튼을 클릭합니다.
+   - 생성된 Pipeline Job의 페이지로 이동하며, '빌드 실행' 버튼을 클릭하여 파이프라인을 수동으로 실행할 수 있습니다.
+   - '빌드 내역' 섹션에서 빌드의 진행 상황을 확인할 수 있으며, 빌드 번호를 클릭하면 빌드 로그와 결과를 확인할 수 있습니다.
+
+### 예제 2: 환경 변수 설정 및 사용
+
+Declarative Pipeline에서 환경 변수를 설정하고 사용하는 예제입니다.
+
+1. **Pipeline 정의**
+   - 'Pipeline' 섹션에서 다음과 같은 스크립트를 입력합니다:
+     ```groovy
+     pipeline {
+         agent any
+         environment {
+             VERSION = '1.0.0'
+         }
+         stages {
+             stage('Build') {
+                 steps {
+                     echo "Building version ${VERSION}..."
+                     // 빌드 관련 명령어 실행
+                 }
+             }
+             stage('Test') {
+                 steps {
+                     echo "Testing version ${VERSION}..."
+                     // 테스트 관련 명령어 실행
+                 }
+             }
+             stage('Deploy') {
+                 steps {
+                     echo "Deploying version ${VERSION}..."
+                     // 배포 관련 명령어 실행
+                 }
+             }
+         }
+     }
+     ```
+
+### 예제 3: 조건부 단계 실행
+
+Declarative Pipeline에서 조건부로 단계를 실행하는 예제입니다. 여기서는 특정 브랜치에서만 배포 단계를 실행하도록 설정합니다.
+
+1. **Pipeline 정의**
+   - 'Pipeline' 섹션에서 다음과 같은 스크립트를 입력합니다:
+     ```groovy
+     pipeline {
+         agent any
+         stages {
+             stage('Build') {
+                 steps {
+                     echo 'Building...'
+                     // 빌드 관련 명령어 실행
+                 }
+             }
+             stage('Test') {
+                 steps {
+                     echo 'Testing...'
+                     // 테스트 관련 명령어 실행
+                 }
+             }
+             stage('Deploy') {
+                 when {
+                     branch 'main'
+                 }
+                 steps {
+                     echo 'Deploying...'
+                     // 배포 관련 명령어 실행
+                 }
+             }
+         }
+     }
+     ```
+
+## Scripted Pipeline과의 차이점
+
+Declarative Pipeline과 Scripted Pipeline의 주요 차이점은 다음과 같습니다:
+
+- **구조화**: Declarative Pipeline은 구조화된 구문을 사용하여 읽기 쉽고 유지 보수하기 쉽습니다. Scripted Pipeline은 Groovy DSL을 사용하여 더 유연하지만, 복잡한 구문을 가질 수 있습니다.
+- **에러 처리**: Declarative Pipeline은 더 나은 에러 처리를 제공하며, 구문 오류를 쉽게 잡아낼 수 있습니다.
+- **기능 제한**: Scripted Pipeline은 더 많은 기능과 유연성을 제공하지만, Declarative Pipeline은 일반적인 CI/CD 작업에 충분한 기능을 제공하면서도 간단하게 작성할 수 있습니다.
+
+이로써 Jenkins Declarative Pipeline의 기본 개념과 예제를 다루었습니다. 
+
+다음 섹션에서는 Jenkins와 버전 관리 시스템(Git)의 통합에 대해 다루겠습니다.

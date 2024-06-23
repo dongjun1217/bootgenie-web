@@ -1,0 +1,170 @@
+---
+title: Jenkins와 CI/CD 파이프라인
+description: Jenkins와 CI/CD 파이프라인
+---
+## CI/CD 파이프라인의 구성과 원리
+
+CI/CD 파이프라인은 코드 변경 사항을 자동으로 빌드, 테스트, 배포하는 일련의 프로세스를 의미합니다. 이를 통해 코드 품질을 유지하고 배포 주기를 단축할 수 있습니다. 
+
+Jenkins는 CI/CD 파이프라인을 쉽게 구축하고 관리할 수 있는 강력한 도구입니다.
+
+## Jenkins로 CI/CD 파이프라인 구현하기
+
+Jenkins로 CI/CD 파이프라인을 구현하려면 다음 단계를 따릅니다:
+
+1. **Pipeline Job 생성**
+2. **Pipeline 정의**
+3. **빌드, 테스트, 배포 단계 설정**
+4. **자동화 테스트 및 배포 설정**
+
+### 1. Pipeline Job 생성
+
+1. **새로운 Pipeline Job 생성**
+   - Jenkins 대시보드에서 '새로운 Item'을 클릭합니다.
+   - 이름을 입력하고 'Pipeline'을 선택한 후 '확인'을 클릭합니다.
+
+### 2. Pipeline 정의
+
+Pipeline Job이 생성되면, 파이프라인을 정의하는 코드를 작성해야 합니다. Declarative Pipeline을 사용하여 간단한 예제를 만들어보겠습니다.
+
+```groovy
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/your-repository.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                // 빌드 관련 명령어 실행
+            }
+        }
+        stage('Test') {
+            steps {
+                echo 'Testing...'
+                // 테스트 관련 명령어 실행
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploying...'
+                // 배포 관련 명령어 실행
+            }
+        }
+    }
+}
+```
+
+### 3. 빌드, 테스트, 배포 단계 설정
+
+각 단계에서는 필요한 작업을 정의합니다. 여기서는 간단한 예제로 빌드, 테스트, 배포 단계를 설정합니다.
+
+1. **Checkout 단계**
+   - Git 저장소에서 코드를 체크아웃합니다.
+
+2. **Build 단계**
+   - 빌드 도구(Maven, Gradle 등)를 사용하여 코드를 빌드합니다. 예를 들어, Maven을 사용한다면:
+     ```groovy
+     stage('Build') {
+         steps {
+             sh 'mvn clean package'
+         }
+     }
+     ```
+
+3. **Test 단계**
+   - 자동화된 테스트를 실행합니다. 예를 들어, JUnit 테스트를 실행한다면:
+     ```groovy
+     stage('Test') {
+         steps {
+             sh 'mvn test'
+         }
+     }
+     ```
+
+4. **Deploy 단계**
+   - 빌드된 아티팩트를 배포합니다. 예를 들어, Docker를 사용하여 컨테이너를 배포한다면:
+     ```groovy
+     stage('Deploy') {
+         steps {
+             sh 'docker build -t your-image-name .'
+             sh 'docker run -d your-image-name'
+         }
+     }
+     ```
+
+### 4. 자동화 테스트 및 배포 설정
+
+CI/CD 파이프라인에서 자동화된 테스트와 배포를 설정하면 코드 변경 사항이 신속하게 프로덕션 환경에 반영될 수 있습니다. 이를 통해 코드 품질을 유지하고 배포 주기를 단축할 수 있습니다.
+
+## 예시를 통한 CI/CD 파이프라인 구현
+
+다음은 Git 저장소에서 코드를 가져와 빌드, 테스트, 배포하는 완전한 CI/CD 파이프라인 예제입니다.
+
+1. **Pipeline Job 생성**
+   - Jenkins 대시보드에서 '새로운 Item'을 클릭합니다.
+   - 이름을 입력하고 'Pipeline'을 선택한 후 '확인'을 클릭합니다.
+
+2. **Pipeline 정의**
+   - 'Pipeline' 섹션에서 다음과 같은 스크립트를 입력합니다:
+     ```groovy
+     pipeline {
+         agent any
+         stages {
+             stage('Checkout') {
+                 steps {
+                     git branch: 'main', url: 'https://github.com/your-repository.git'
+                 }
+             }
+             stage('Build') {
+                 steps {
+                     sh 'mvn clean package'
+                 }
+             }
+             stage('Test') {
+                 steps {
+                     sh 'mvn test'
+                 }
+             }
+             stage('Deploy') {
+                 steps {
+                     sh 'docker build -t your-image-name .'
+                     sh 'docker run -d your-image-name'
+                 }
+             }
+         }
+         post {
+             always {
+                 echo 'Pipeline finished.'
+             }
+             success {
+                 echo 'Pipeline succeeded.'
+             }
+             failure {
+                 echo 'Pipeline failed.'
+             }
+         }
+     }
+     ```
+
+3. **저장 및 실행**
+   - 설정을 마친 후 '저장' 버튼을 클릭합니다.
+   - 생성된 Pipeline Job의 페이지로 이동하며, '빌드 실행' 버튼을 클릭하여 파이프라인을 수동으로 실행할 수 있습니다.
+   - '빌드 내역' 섹션에서 빌드의 진행 상황을 확인할 수 있으며, 빌드 번호를 클릭하면 빌드 로그와 결과를 확인할 수 있습니다.
+
+## 요약
+
+Jenkins를 사용하여 CI/CD 파이프라인을 구현하면 소스 코드의 변경 사항을 자동으로 빌드, 테스트, 배포할 수 있습니다. 
+
+이를 통해 개발 주기를 단축하고 코드 품질을 향상시킬 수 있습니다. 
+
+Jenkins와 Git을 통합하여 코드 변경 시 자동으로 빌드를 트리거하고, 다양한 빌드, 테스트, 배포 단계를 설정하여 CI/CD 파이프라인을 완성할 수 있습니다.
+
+---
+
+이로써 Jenkins를 사용한 CI/CD 파이프라인 구현 방법을 마쳤습니다. 
+
+다음 섹션에서는 Jenkins의 고급 설정 및 플러그인에 대해 다루겠습니다.

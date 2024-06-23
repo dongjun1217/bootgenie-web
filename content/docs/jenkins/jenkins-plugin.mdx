@@ -1,0 +1,167 @@
+---
+title: Jenkins 고급 설정 및 플러그인
+description: Jenkins 고급 설정 및 플러그인
+---
+
+## 고급 설정 옵션 탐색
+
+Jenkins의 고급 설정을 통해 Jenkins의 기능을 더욱 확장하고 최적화할 수 있습니다. 여기서는 몇 가지 주요 고급 설정 옵션을 다루겠습니다.
+
+### 시스템 설정 (System Configuration)
+
+1. **Jenkins URL 설정**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Configure System'을 선택합니다.
+   - 'Jenkins URL' 필드에 Jenkins 서버의 기본 URL을 입력합니다. 예를 들어, `http://your-jenkins-url/`.
+   - 저장 후 적용을 클릭합니다.
+
+2. **환경 변수 설정**
+   - 'Global properties' 섹션에서 'Environment variables'를 체크하고 필요한 환경 변수를 추가합니다.
+   - 예를 들어, `JAVA_HOME` 또는 `MAVEN_HOME`과 같은 변수를 설정할 수 있습니다.
+
+### 사용자 및 권한 관리
+
+1. **보안 설정**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Configure Global Security'를 선택합니다.
+   - 'Jenkins의 보안 설정 활성화'를 체크합니다.
+   - 보안 영역을 설정하고 필요한 사용자 인증 방식을 선택합니다. 예를 들어, 'Jenkins의 자체 사용자 데이터베이스'를 사용할 수 있습니다.
+   - 저장 후 적용을 클릭합니다.
+
+2. **사용자 관리**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Manage Users'를 선택합니다.
+   - 'Create User' 버튼을 클릭하여 새로운 사용자를 생성합니다.
+
+### 분산 빌드 설정
+
+1. **노드 및 에이전트 설정**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Manage Nodes and Clouds'를 선택합니다.
+   - 'New Node' 버튼을 클릭하여 새로운 노드를 추가합니다.
+   - 노드의 이름을 입력하고 'Permanent Agent'를 선택합니다.
+   - 노드의 세부 설정을 입력하고 저장합니다.
+
+## 인기 있는 플러그인 및 사용 예
+
+Jenkins의 강력한 기능 중 하나는 다양한 플러그인을 통해 기능을 확장할 수 있다는 점입니다. 여기서는 몇 가지 인기 있는 플러그인과 그 사용 예를 소개합니다.
+
+### 1. Blue Ocean 플러그인
+
+Blue Ocean은 Jenkins의 새로운 UI로, 파이프라인을 시각적으로 구성하고 관리할 수 있게 해줍니다.
+
+1. **설치**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Manage Plugins'를 선택합니다.
+   - 'Available' 탭에서 'Blue Ocean'을 검색하고 설치합니다.
+
+2. **사용**
+   - Jenkins 대시보드에서 'Open Blue Ocean'을 클릭하여 새로운 UI로 전환합니다.
+   - Blue Ocean을 통해 파이프라인을 시각적으로 구성하고 빌드 상태를 쉽게 확인할 수 있습니다.
+
+### 2. GitHub 플러그인
+
+GitHub 플러그인은 GitHub와 Jenkins를 쉽게 연동할 수 있게 해줍니다.
+
+1. **설치**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Manage Plugins'를 선택합니다.
+   - 'Available' 탭에서 'GitHub'를 검색하고 설치합니다.
+
+2. **사용**
+   - GitHub 플러그인을 사용하여 Jenkins Job을 생성할 때 GitHub 저장소를 쉽게 연동할 수 있습니다.
+   - GitHub Webhooks를 설정하여 코드 변경 시 자동으로 빌드를 트리거할 수 있습니다.
+
+### 3. Slack Notification 플러그인
+
+Slack Notification 플러그인은 빌드 상태를 Slack 채널로 알림을 보낼 수 있게 해줍니다.
+
+1. **설치**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Manage Plugins'를 선택합니다.
+   - 'Available' 탭에서 'Slack Notification'를 검색하고 설치합니다.
+
+2. **설정**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Configure System'을 선택합니다.
+   - 'Slack' 섹션에서 Slack Webhook URL과 기본 채널을 설정합니다.
+
+3. **사용**
+   - Jenkins Job 설정에서 'Post-build Actions' 섹션에 'Slack Notifications'를 추가합니다.
+   - 빌드 완료 시 Slack으로 알림을 받을 수 있습니다.
+
+## 커스텀 플러그인 개발 방법
+
+Jenkins의 기능을 더욱 확장하기 위해 커스텀 플러그인을 개발할 수도 있습니다. 다음은 간단한 Jenkins 플러그인을 개발하는 기본 단계입니다.
+
+1. **개발 환경 설정**
+   - Jenkins 플러그인을 개발하려면 Java Development Kit (JDK)와 Apache Maven이 필요합니다.
+   - Jenkins 플러그인 SDK를 설치합니다:
+     ```sh
+     mvn org.jenkins-ci.tools:maven-hpi-plugin:create
+     ```
+
+2. **플러그인 코드 작성**
+   - 플러그인 프로젝트의 `src/main/java` 디렉토리에서 플러그인 코드를 작성합니다.
+   - 예를 들어, 간단한 빌드 단계 플러그인을 작성할 수 있습니다:
+     ```java
+     package io.jenkins.plugins.sample;
+
+     import hudson.Launcher;
+     import hudson.Extension;
+     import hudson.model.BuildListener;
+     import hudson.model.AbstractBuild;
+     import hudson.tasks.Builder;
+     import hudson.tasks.BuildStepDescriptor;
+     import hudson.tasks.BuildStepMonitor;
+     import hudson.tasks.Publisher;
+     import org.kohsuke.stapler.DataBoundConstructor;
+
+     public class SampleBuilder extends Builder {
+
+         private final String name;
+
+         @DataBoundConstructor
+         public SampleBuilder(String name) {
+             this.name = name;
+         }
+
+         @Override
+         public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) {
+             listener.getLogger().println("Hello, " + name + "!");
+             return true;
+         }
+
+         public String getName() {
+             return name;
+         }
+
+         @Extension
+         public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
+             @Override
+             public boolean isApplicable(Class<? extends AbstractBuild> jobType) {
+                 return true;
+             }
+
+             @Override
+             public String getDisplayName() {
+                 return "Sample Builder";
+             }
+         }
+     }
+     ```
+
+3. **플러그인 빌드 및 설치**
+   - 플러그인 프로젝트의 루트 디렉토리에서 다음 명령어를 실행하여 플러그인을 빌드합니다:
+     ```sh
+     mvn package
+     ```
+   - 생성된 `.hpi` 파일을 Jenkins에 설치합니다:
+     - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+     - 'Manage Plugins'를 선택합니다.
+     - 'Advanced' 탭에서 'Upload Plugin' 섹션에 생성된 `.hpi` 파일을 업로드합니다.
+
+
+이로써 Jenkins의 고급 설정 및 플러그인 사용 방법을 마쳤습니다. 
+
+다음 섹션에서는 Jenkins의 확장성 및 모니터링에 대해 다루겠습니다.

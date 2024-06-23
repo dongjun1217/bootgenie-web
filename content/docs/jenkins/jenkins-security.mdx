@@ -1,0 +1,90 @@
+---
+title: Jenkins 보안 및 유지보수
+description: Jenkins 보안 및 유지보수
+---
+
+## Jenkins 보안 설정
+
+Jenkins는 강력한 보안 설정을 제공하여 시스템을 보호하고 무단 액세스를 방지할 수 있습니다. 여기서는 Jenkins의 주요 보안 설정 방법을 다루겠습니다.
+
+### 1. 보안 설정 활성화
+
+1. **Jenkins 보안 설정 활성화**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Configure Global Security'를 선택합니다.
+   - 'Enable security'를 체크하여 보안 설정을 활성화합니다.
+
+2. **보안 영역 설정**
+   - **Jenkins의 자체 사용자 데이터베이스**: Jenkins 자체 데이터베이스를 사용하여 사용자 인증을 관리합니다.
+     - 'Security Realm'에서 'Jenkins's own user database'를 선택합니다.
+     - 'Allow users to sign up' 옵션을 선택하여 사용자가 직접 계정을 생성할 수 있도록 합니다(선택 사항).
+   - **LDAP**: 조직의 LDAP 서버를 사용하여 사용자 인증을 관리합니다.
+     - 'Security Realm'에서 'LDAP'를 선택하고 LDAP 서버 정보를 입력합니다.
+
+3. **권한 관리**
+   - **Matrix-based security**: 사용자와 그룹에 세부적인 권한을 할당할 수 있습니다.
+     - 'Authorization'에서 'Matrix-based security'를 선택합니다.
+     - 사용자 및 그룹을 추가하고 각 권한(예: Read, Write, Execute 등)을 설정합니다.
+   - **Project-based Matrix Authorization Strategy**: 각 프로젝트마다 개별 권한을 설정할 수 있습니다.
+
+### 2. 사용자 및 권한 관리
+
+1. **사용자 계정 생성**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Manage Users'를 선택합니다.
+   - 'Create User' 버튼을 클릭하여 새로운 사용자를 생성합니다.
+   - 사용자 이름, 비밀번호, 이름, 이메일 주소를 입력하고 'Create User'를 클릭합니다.
+
+2. **사용자 권한 설정**
+   - 'Configure Global Security' 페이지로 이동하여 권한을 설정합니다.
+   - 각 사용자가 수행할 수 있는 작업(예: Job 읽기, 빌드 실행, 설정 변경 등)을 세부적으로 지정합니다.
+
+## Jenkins 유지보수
+
+Jenkins의 원활한 운영을 위해 정기적인 유지보수가 필요합니다. 유지보수 작업에는 백업 및 복구, 로그 관리, 업데이트 등이 포함됩니다.
+
+### 1. Jenkins 백업 및 복구
+
+1. **백업**
+   - Jenkins 홈 디렉토리(기본 경로는 `/var/lib/jenkins` 또는 `C:\Program Files (x86)\Jenkins`)를 정기적으로 백업합니다.
+   - 주요 백업 대상:
+     - `config.xml`: Jenkins 시스템 구성 파일
+     - `jobs/`: 모든 Jenkins Job의 설정 파일
+     - `plugins/`: 설치된 플러그인
+     - `secrets/`: 보안 정보
+
+2. **복구**
+   - 백업된 파일을 Jenkins 홈 디렉토리에 복사합니다.
+   - Jenkins를 재시작하여 복구된 설정을 적용합니다.
+
+### 2. 로그 관리
+
+1. **시스템 로그**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'System Log'를 선택하여 시스템 로그를 확인합니다.
+   - 필요에 따라 'Add new log recorder'를 클릭하여 특정 로그 레코더를 추가합니다.
+
+2. **Job 로그**
+   - 각 Job의 빌드 페이지에서 'Console Output'을 클릭하여 빌드 로그를 확인합니다.
+   - 로그 보존 기간을 설정하여 디스크 공간을 효율적으로 관리합니다:
+     - Job 설정 페이지에서 'Discard old builds'를 체크하고 보존 기간을 설정합니다.
+
+### 3. Jenkins 업데이트
+
+1. **Jenkins 업데이트**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Manage Plugins'를 선택합니다.
+   - 'Updates' 탭에서 Jenkins 코어 및 플러그인의 최신 업데이트를 확인하고 설치합니다.
+   - Jenkins를 재시작하여 업데이트를 적용합니다.
+
+2. **플러그인 업데이트**
+   - 'Manage Plugins'의 'Updates' 탭에서 설치된 플러그인의 업데이트를 확인하고 설치합니다.
+   - Jenkins를 재시작하여 업데이트를 적용합니다.
+
+## 요약
+
+Jenkins의 보안 설정과 유지보수는 시스템의 안정성과 신뢰성을 유지하는 데 필수적입니다. 보안 설정을 통해 무단 액세스를 방지하고, 사용자 권한을 세부적으로 관리할 수 있습니다. 
+
+또한, 정기적인 백업과 로그 관리를 통해 데이터 손실을 방지하고 문제를 신속하게 해결할 수 있습니다. 
+
+마지막으로, 최신 업데이트를 적용하여 새로운 기능을 활용하고 보안 취약점을 최소화할 수 있습니다.

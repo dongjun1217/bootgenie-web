@@ -1,0 +1,148 @@
+---
+title: Jenkins와 Git 통합
+description: Jenkins와 Git 통합
+---
+## Jenkins와 Git 통합의 필요성
+
+Jenkins와 Git의 통합은 Continuous Integration (CI) 및 Continuous Delivery (CD) 파이프라인에서 핵심적인 역할을 합니다. Git은 널리 사용되는 분산 버전 관리 시스템으로, 소스 코드의 버전 관리를 효율적으로 할 수 있습니다. 
+
+Jenkins는 Git 저장소에서 코드를 가져와 빌드, 테스트, 배포 과정을 자동화할 수 있습니다. 이를 통해 개발 주기를 단축하고 코드 품질을 향상시킬 수 있습니다.
+
+## Git 플러그인 설치
+
+Jenkins에서 Git을 사용하려면 Git 플러그인을 설치해야 합니다. 기본적으로 Jenkins 설치 시 Git 플러그인이 포함되지만, 설치되어 있지 않다면 다음 단계를 따라 설치할 수 있습니다.
+
+1. **플러그인 관리**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Manage Plugins'를 선택합니다.
+
+2. **플러그인 설치**
+   - 'Available' 탭에서 'Git plugin'을 검색합니다.
+   - 'Git plugin'을 선택하고 'Install without restart' 또는 'Download now and install after restart'를 클릭하여 설치합니다.
+
+## Jenkins와 Git 연동 설정
+
+1. **Global Tool Configuration 설정**
+   - Jenkins 대시보드에서 'Manage Jenkins'를 클릭합니다.
+   - 'Global Tool Configuration'를 선택합니다.
+   - 'Git' 섹션에서 Git 실행 파일의 경로를 설정합니다. Git이 시스템에 설치되어 있다면 Jenkins가 자동으로 경로를 감지합니다.
+
+2. **Git 저장소 설정**
+   - Jenkins 대시보드에서 '새로운 Item'을 클릭합니다.
+   - 이름을 입력하고 'Pipeline'을 선택한 후 '확인'을 클릭합니다.
+   - 'Pipeline' 섹션에서 다음과 같은 스크립트를 입력합니다:
+     ```groovy
+     pipeline {
+         agent any
+         stages {
+             stage('Checkout') {
+                 steps {
+                     git branch: 'main', url: 'https://github.com/your-repository.git'
+                 }
+             }
+             stage('Build') {
+                 steps {
+                     echo 'Building...'
+                     // 빌드 관련 명령어 실행
+                 }
+             }
+             stage('Test') {
+                 steps {
+                     echo 'Testing...'
+                     // 테스트 관련 명령어 실행
+                 }
+             }
+             stage('Deploy') {
+                 steps {
+                     echo 'Deploying...'
+                     // 배포 관련 명령어 실행
+                 }
+             }
+         }
+     }
+     ```
+
+## Webhooks 및 Poll SCM 설정
+
+Jenkins와 Git의 통합을 통해 코드 변경 시 자동으로 빌드를 트리거할 수 있습니다. 이를 위해 Webhooks 또는 Poll SCM을 설정할 수 있습니다.
+
+### Webhooks 설정
+
+GitHub 또는 GitLab과 같은 서비스에서 Webhooks를 설정하여 코드가 커밋될 때 Jenkins 빌드를 트리거할 수 있습니다.
+
+1. **GitHub Webhooks 설정**
+   - GitHub 저장소로 이동하여 'Settings'를 클릭합니다.
+   - 'Webhooks' 탭을 선택한 후 'Add webhook' 버튼을 클릭합니다.
+   - 'Payload URL'에 Jenkins의 Webhook URL을 입력합니다. 일반적으로 `http://your-jenkins-url/github-webhook/` 형식을 사용합니다.
+   - 'Content type'을 'application/json'으로 설정합니다.
+   - 'Which events would you like to trigger this webhook?'에서 'Just the push event.'를 선택합니다.
+   - 'Add webhook' 버튼을 클릭하여 설정을 저장합니다.
+
+### Poll SCM 설정
+
+Poll SCM은 Jenkins가 일정한 주기로 Git 저장소를 체크하여 변경 사항이 있는지 확인하고, 변경 사항이 있을 때 빌드를 트리거하는 방법입니다.
+
+1. **Pipeline Job 설정**
+   - Jenkins 대시보드에서 기존 Pipeline Job을 선택하거나 새로운 Pipeline Job을 생성합니다.
+   - '빌드 트리거 (Build Triggers)' 섹션으로 이동합니다.
+   - 'Poll SCM' 옵션을 선택하고 스케줄을 설정합니다. 예를 들어, `H/5 * * * *`는 5분마다 저장소를 체크합니다.
+
+## 예시를 통한 Git과 Jenkins 통합
+
+### 예제 1: GitHub에서 코드 가져오기
+
+1. **Pipeline Job 생성**
+   - Jenkins 대시보드에서 '새로운 Item'을 클릭합니다.
+   - 이름을 입력하고 'Pipeline'을 선택한 후 '확인'을 클릭합니다.
+
+2. **Pipeline 정의**
+   - 'Pipeline' 섹션에서 다음과 같은 스크립트를 입력합니다:
+     ```groovy
+     pipeline {
+         agent any
+         stages {
+             stage('Checkout') {
+                 steps {
+                     git branch: 'main', url: 'https://github.com/your-repository.git'
+                 }
+             }
+             stage('Build') {
+                 steps {
+                     echo 'Building...'
+                     // 빌드 관련 명령어 실행
+                 }
+             }
+             stage('Test') {
+                 steps {
+                     echo 'Testing...'
+                     // 테스트 관련 명령어 실행
+                 }
+             }
+             stage('Deploy') {
+                 steps {
+                     echo 'Deploying...'
+                     // 배포 관련 명령어 실행
+                 }
+             }
+         }
+     }
+     ```
+
+3. **저장 및 실행**
+   - 설정을 마친 후 '저장' 버튼을 클릭합니다.
+   - 생성된 Pipeline Job의 페이지로 이동하며, '빌드 실행' 버튼을 클릭하여 파이프라인을 수동으로 실행할 수 있습니다.
+   - '빌드 내역' 섹션에서 빌드의 진행 상황을 확인할 수 있으며, 빌드 번호를 클릭하면 빌드 로그와 결과를 확인할 수 있습니다.
+
+## 요약
+
+Jenkins와 Git의 통합은 CI/CD 파이프라인의 핵심 요소로, 소스 코드를 자동으로 빌드, 테스트, 배포할 수 있게 합니다. 
+
+Git 플러그인 설치, Jenkins와 Git 연동 설정, Webhooks 및 Poll SCM 설정을 통해 Git 저장소에서의 코드 변경 사항을 효과적으로 관리할 수 있습니다. 
+
+이를 통해 개발 주기를 단축하고, 코드 품질을 향상시킬 수 있습니다.
+
+---
+
+이로써 Jenkins와 Git의 통합에 대한 설명을 마쳤습니다.
+
+다음 섹션에서는 Jenkins를 사용하여 CI/CD 파이프라인을 구현하는 방법에 대해 다루겠습니다.

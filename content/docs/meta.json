@@ -3,6 +3,7 @@
     "pages": [
       "index",
       "spring",
-      "devops"
+      "devops",
+      "jenkins"
     ]
   }
