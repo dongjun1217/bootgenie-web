@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://boot-genie.com/</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/generate</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-framework</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-basic</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-module</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-settings</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-web-develop</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-data-access</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-transaction</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-security</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-test</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/spring/spring-ops</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/devops/devops-start</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/devops/devops-ci</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/devops/devops-cd</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/devops/devops-iac</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/devops/devops-container</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/devops/devops-security</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/devops/devops-toolchain</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-start</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-setup</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-firstjob</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-pipeline</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-declarative</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-git</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-cicd</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-plugin</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-monitoring</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://boot-genie.com/docs/jenkins/jenkins-security</loc>
+  <lastmod>2024-06-23T18:06:09+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+
+
+</urlset>
