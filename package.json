@@ -5,8 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "serve": "npx http-server out",
-    "postbuild": "next-sitemap"
+    "serve": "npx http-server out"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -26,7 +25,6 @@
     "fumadocs-ui": "12.1.2",
     "lucide-react": "^0.390.0",
     "next": "14.2.3",
-    "next-sitemap": "^4.2.3",
     "next-themes": "^0.3.0",
     "react": "^18",
     "react-dom": "^18",
