@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import type { ReactNode } from 'react';
 import { Analytics } from "@vercel/analytics/react"
+import { CSPostHogProvider } from './providers'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,10 +20,12 @@ export default function Layout({
   return (
     
     <html lang="en" className="dark" suppressHydrationWarning>
-      <body className={inter.className}>
-        {children}
-        <Analytics/>
-      </body>
+      <CSPostHogProvider>
+        <body className={inter.className}>
+          {children}
+          <Analytics/>
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
